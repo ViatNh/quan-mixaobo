@@ -12,6 +12,11 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
 /* ===== COMMON ===== */
 .header{background:#c0392b;color:#fff;padding:14px 20px;text-align:center;font-size:22px;font-weight:800;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .header .sub{font-size:12px;font-weight:400;opacity:.9;margin-top:2px}
+.header.bep{position:static;padding:6px 14px;font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.header.bep .bep-live{display:flex;align-items:center;gap:8px;font-size:13px}
+.header.bep .live-dot{width:10px;height:10px;background:#2ecc71;border-radius:50%;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
 .btn{display:block;width:100%;padding:16px;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;transition:.15s;text-align:center}
 .btn:active{transform:scale(.97)}
 
@@ -52,34 +57,37 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
 @keyframes fInOut{0%{opacity:0;transform:translateX(-50%) translateY(-20px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}70%{opacity:1}100%{opacity:0}}
 
 /* ===== BEP ===== */
-#bep-view{padding:10px}
-.bep-header{display:flex;justify-content:space-between;align-items:center;padding:4px 0 12px}
-.bep-title{font-size:20px;font-weight:800;color:#c0392b}
-.bep-time{font-size:13px;color:#888}
-.bep-stats{display:flex;gap:6px}
-.stat-badge{padding:5px 12px;border-radius:16px;font-size:13px;font-weight:700}
+#bep-view{padding:8px}
+.bep-stats-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0 8px}
+.bep-title-row{font-size:17px;font-weight:800;color:#c0392b}
+.bep-badges{display:flex;gap:6px;align-items:center}
+.stat-badge{padding:6px 14px;border-radius:16px;font-size:14px;font-weight:700}
 .stat-waiting{background:#ffeaa7;color:#d63031}
 .stat-done{background:#dfe6e9;color:#636e72}
 
-.logout-btn{padding:8px 16px;border:2px solid #c0392b;border-radius:10px;background:#fff;color:#c0392b;font-size:14px;font-weight:700;cursor:pointer}
+.logout-btn{padding:6px 12px;border:2px solid #c0392b;border-radius:8px;background:#fff;color:#c0392b;font-size:13px;font-weight:700;cursor:pointer}
 
-.order-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);border-left:5px solid #fdcb6e;transition:.3s}
+.order-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);border-left:6px solid #fdcb6e;transition:.3s}
 .order-card.new{border-left-color:#d63031;animation:pulse 1s ease-in-out}
-.order-card.done{border-left-color:#00b894;opacity:.7;background:#f8fff8}
-@keyframes pulse{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.08)}50%{box-shadow:0 4px 14px rgba(214,48,49,.3)}}
+.order-card.done{border-left-color:#00b894;opacity:.6;background:#f8fff8}
+@keyframes pulse{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.08)}50%{box-shadow:0 4px 18px rgba(214,48,49,.35)}}
 
-.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.order-number{font-size:18px;font-weight:800;color:#c0392b}
-.order-customer{font-size:14px;color:#555;font-weight:600}
-.order-time{font-size:11px;color:#999}
-.order-items{list-style:none;padding:0;margin:6px 0}
-.order-items li{font-size:17px;font-weight:600;padding:3px 0;display:flex;justify-content:space-between}
-.qty-badge{background:#eee;padding:2px 8px;border-radius:8px;font-size:13px}
-.order-note{font-size:13px;color:#e17055;font-style:italic;margin:4px 0;padding:6px 10px;background:#fff5f5;border-radius:8px}
-.done-btn{width:100%;padding:14px;background:#00b894;color:#fff;font-size:18px;font-weight:800;margin-top:6px}
+.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.order-number{font-size:20px;font-weight:800;color:#c0392b}
+.order-customer{font-size:16px;color:#555;font-weight:700}
+.order-time{font-size:12px;color:#999}
 
-.divider{padding:8px 0;text-align:center;color:#888;font-size:13px;font-weight:600}
-.empty-state{text-align:center;padding:40px 20px;color:#bbb;font-size:17px;font-weight:600}
+/* ★★★ BIG FOOD ITEMS ★★★ */
+.order-items{list-style:none;padding:4px 0;margin:8px 0}
+.order-items li{font-size:24px;font-weight:700;padding:6px 0;display:flex;justify-content:space-between;align-items:center;line-height:1.4}
+.order-items .item-qty{background:#d63031;color:#fff;padding:4px 14px;border-radius:10px;font-size:20px;font-weight:800;white-space:nowrap}
+
+.order-note{font-size:15px;color:#e17055;font-style:italic;margin:6px 0;padding:8px 12px;background:#fff5f5;border-radius:10px;font-weight:600}
+
+.done-btn{width:100%;padding:16px;background:#00b894;color:#fff;font-size:20px;font-weight:800;margin-top:8px}
+
+.divider{padding:8px 0;text-align:center;color:#888;font-size:14px;font-weight:600}
+.empty-state{text-align:center;padding:40px 20px;color:#bbb;font-size:18px;font-weight:600}
 
 /* ===== ADMIN ===== */
 #admin-view{padding:12px}
@@ -102,6 +110,8 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
 .admin-btn{padding:10px 16px;border:2px solid #ddd;border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer}
 .admin-btn.danger{border-color:#d63031;color:#d63031}
 .section-title{font-size:18px;font-weight:700;margin:20px 0 10px}
+
+.sec-note{background:#fff3cd;padding:12px 16px;border-radius:12px;font-size:13px;color:#856404;margin-top:12px;line-height:1.6}
 
 @media(min-width:768px){
   #khach-view .menu-grid,.order-form{max-width:520px;margin:0 auto}
@@ -142,19 +152,21 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
 
 <!-- ===== BẾP ===== -->
 <div id="bep-view" class="hidden">
-  <div class="header">🔥 BẾP<div class="sub">Mẹ ơi làm đơn từ trên xuống nhé!</div></div>
-  <div class="bep-header">
-    <div><div class="bep-title">ĐƠN ĐANG CHỜ</div><div class="bep-time" id="bepTime"></div></div>
-    <div class="bep-stats">
-      <div class="stat-badge stat-waiting" id="waitingCount">0</div>
-      <div class="stat-badge stat-done" id="doneCount">0</div>
-      <button class="logout-btn" onclick="logout()">🔒</button>
+  <div class="header bep">
+    <span>🔥 BẾP</span>
+    <div class="bep-live"><span class="live-dot"></span> <span id="bepTime">--:--:--</span></div>
+    <button class="logout-btn" onclick="logout()">🔒 Thoát</button>
+  </div>
+  <div class="bep-stats-row">
+    <div class="bep-title-row">📋 ĐƠN ĐANG CHỜ</div>
+    <div class="bep-badges">
+      <div class="stat-badge stat-waiting" id="waitingCount">0 đơn</div>
+      <div class="stat-badge stat-done" id="doneCount">0 xong</div>
     </div>
   </div>
   <div id="waitingOrders"></div>
-  <div class="divider" id="doneDivider" style="display:none">── ĐÃ XONG ──</div>
+  <div class="divider" id="doneDivider" style="display:none">── ✅ ĐÃ XONG ──</div>
   <div id="doneOrders"></div>
-  <div class="divider" style="font-size:11px;color:#ccc">🔄 Tự động cập nhật</div>
 </div>
 
 <!-- ===== ADMIN ===== -->
@@ -181,6 +193,10 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
     <button class="admin-btn" onclick="resetToday()">🔄 Reset hôm nay</button>
     <button class="admin-btn danger" onclick="clearAll()">🗑️ Xóa tất cả</button>
   </div>
+  <div class="sec-note" id="secNote">
+    🔐 <b>Bảo mật:</b> PIN đã được mã hóa SHA-256, không lưu dạng plaintext.<br>
+    ⚠️ <b>Lưu ý:</b> Đổi PIN chỉ áp dụng cho thiết bị hiện tại. Muốn đồng bộ PIN giữa máy bếp và máy quản trị, cần đổi PIN trên từng máy riêng.
+  </div>
 </div>
 
 <script>
@@ -195,6 +211,8 @@ const MENU = [
   { id:7,  name:'🍳 Bánh mì ốp la',     price:15000 },
 ];
 
+const SALT = 'quan-mixaobo-2024';
+
 // ===== STATE =====
 const LS = k => JSON.parse(localStorage.getItem('quan_'+k) || 'null');
 const SS = (k, v) => localStorage.setItem('quan_'+k, JSON.stringify(v));
@@ -204,22 +222,53 @@ MENU.forEach(m => cart[m.id] = 0);
 
 let orders = LS('orders') || [];
 let orderSeq = LS('seq') || 0;
-let config = LS('config') || { bepPin: '8888', adminPin: '123456', banCount: 10 };
-SS('config', config);
+let config = null; // loaded async in init
 
-let currentMode = 'khach'; // khach | bep | admin
+let currentMode = 'khach';
 let lockUntil = LS('lockUntil') || 0;
 let failCount = LS('failCount') || 0;
-let gateTarget = ''; // 'bep' or 'admin'
+let gateTarget = '';
 let bepInterval = null;
+
+// ===== PIN HASHING (SHA-256) =====
+async function hashPin(pin) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(SALT + ':' + pin);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// ===== MIGRATION: hash plaintext PINs if found =====
+async function migrateConfig(raw) {
+  if (!raw) {
+    // Brand new: hash defaults
+    return {
+      bepPinHash: await hashPin('8888'),
+      adminPinHash: await hashPin('123456'),
+      banCount: 10
+    };
+  }
+  // Already hashed?
+  if (raw.bepPinHash && raw.adminPinHash) return raw;
+  // Legacy plaintext
+  return {
+    bepPinHash: await hashPin(raw.bepPin || '8888'),
+    adminPinHash: await hashPin(raw.adminPin || '123456'),
+    banCount: raw.banCount || 10
+  };
+}
 
 // ===== URL PARSING =====
 const params = new URLSearchParams(window.location.search);
 const tableNumber = params.get('ban') || '';
-const adminKey = params.get('key') || '';
 
 // ===== INIT =====
-function init() {
+async function init() {
+  // Load & migrate config
+  config = await migrateConfig(LS('config'));
+  SS('config', config);
+
   renderMenu();
   updateTotal();
   
@@ -229,7 +278,6 @@ function init() {
     document.getElementById('banDisplay').classList.remove('hidden');
   }
 
-  // Check hash
   const hash = window.location.hash;
   if (hash === '#bep') showGate('bep');
   else if (hash === '#admin') showGate('admin');
@@ -237,9 +285,8 @@ function init() {
 
   // Auto-refresh bep
   setInterval(() => {
-    if (currentMode === 'bep') renderBep();
-    if (currentMode === 'bep') updateBepTime();
-  }, 4000);
+    if (currentMode === 'bep') { renderBep(); updateBepTime(); }
+  }, 5000);
 }
 
 // ===== MODE SWITCHING =====
@@ -273,7 +320,6 @@ function showGate(target) {
   title.textContent = target === 'bep' ? '🔐 BẾP' : '📊 QUẢN TRỊ';
   sub.textContent = target === 'bep' ? 'Nhập mã PIN 4 số' : 'Nhập mã PIN 6 số';
 
-  // Check lockout
   if (Date.now() < lockUntil) {
     const remain = Math.ceil((lockUntil - Date.now()) / 1000);
     err.innerHTML = `<span class="locked">⏳ Tạm khóa ${Math.ceil(remain/60)} phút</span>`;
@@ -286,14 +332,16 @@ function showGate(target) {
   pin.focus();
 }
 
-function checkPassword() {
+async function checkPassword() {
   if (Date.now() < lockUntil) return;
   
   const pin = document.getElementById('gatePin').value;
   const err = document.getElementById('gateError');
-  const correct = gateTarget === 'bep' ? config.bepPin : config.adminPin;
+  const correctHash = gateTarget === 'bep' ? config.bepPinHash : config.adminPinHash;
+  
+  const inputHash = await hashPin(pin);
 
-  if (pin === correct) {
+  if (inputHash === correctHash) {
     failCount = 0; lockUntil = 0;
     SS('failCount', 0); SS('lockUntil', 0);
     window.location.hash = gateTarget === 'bep' ? '#bep' : '#admin';
@@ -399,15 +447,15 @@ function renderBep() {
 function orderCard(order, waiting) {
   const ago = Math.floor((Date.now() - order.timestamp) / 1000);
   const agoStr = ago < 60 ? `${ago}s` : `${Math.floor(ago/60)}p`;
-  return `<div class="order-card ${waiting && ago < 10 ? 'new' : ''} ${!waiting ? 'done' : ''}">
+  return `<div class="order-card ${waiting && ago < 15 ? 'new' : ''} ${!waiting ? 'done' : ''}">
     <div class="order-header">
       <span class="order-number">#${order.id}</span>
       <span class="order-customer">👤 ${order.customer}</span>
-      <span class="order-time">${order.time} · ${agoStr}</span>
+      <span class="order-time">${order.time} (${agoStr})</span>
     </div>
-    <ul class="order-items">${order.items.map(i => `<li>${i.name} <span class="qty-badge">x${i.qty}</span></li>`).join('')}</ul>
+    <ul class="order-items">${order.items.map(i => `<li><span>${i.name}</span> <span class="item-qty">✕${i.qty}</span></li>`).join('')}</ul>
     ${order.note ? `<div class="order-note">💬 ${order.note}</div>` : ''}
-    ${waiting ? `<button class="btn done-btn" onclick="markDone(${order.id})">✅ XONG — ĐƠN TIẾP</button>` : ''}
+    ${waiting ? `<button class="btn done-btn" onclick="markDone(${order.id})">✅ XONG — ĐƠN TIẾP THEO</button>` : ''}
   </div>`;
 }
 
@@ -430,7 +478,6 @@ function renderAdmin() {
   const todayOrders = orders.filter(o => o.date === today && o.status === 'done');
   const allTodayOrders = orders.filter(o => o.date === today);
 
-  // Stats
   let totalRevenue = 0, totalItems = 0;
   const itemCounts = {};
   todayOrders.forEach(o => {
@@ -444,7 +491,6 @@ function renderAdmin() {
     <div class="stat-card"><div class="value">${todayOrders.length ? Math.round(totalRevenue/todayOrders.length).toLocaleString('vi')+'đ' : '0đ'}</div><div class="label">TB/đơn</div></div>
   `;
 
-  // Top items
   const sorted = Object.entries(itemCounts).sort((a,b) => b[1] - a[1]);
   const maxQty = sorted[0] ? sorted[0][1] : 1;
   document.getElementById('topItems').innerHTML = sorted.length
@@ -455,7 +501,6 @@ function renderAdmin() {
       </div>`).join('')
     : '<div class="empty-state">Chưa có dữ liệu</div>';
 
-  // Weekly
   const weekStats = {};
   for (let d = 6; d >= 0; d--) {
     const date = new Date(Date.now() - d*86400000).toISOString().slice(0,10);
@@ -475,15 +520,23 @@ function renderAdmin() {
 }
 
 // ===== ADMIN ACTIONS =====
-function changeBepPin() {
+async function changeBepPin() {
   const np = prompt('Nhập mã BẾP mới (4 số):');
-  if (np && /^\d{4}$/.test(np)) { config.bepPin = np; SS('config', config); alert('✅ Đã đổi mã BẾP!'); }
+  if (np && /^\d{4}$/.test(np)) { 
+    config.bepPinHash = await hashPin(np); 
+    SS('config', config); 
+    alert('✅ Đã đổi mã BẾP!\n⚠️ Chỉ áp dụng cho máy này. Đổi trên máy bếp riêng nếu cần.');
+  }
   else alert('❌ Mã phải là 4 chữ số');
 }
 
-function changeAdminPin() {
+async function changeAdminPin() {
   const np = prompt('Nhập mã ADMIN mới (6 số):');
-  if (np && /^\d{6}$/.test(np)) { config.adminPin = np; SS('config', config); alert('✅ Đã đổi mã ADMIN!'); }
+  if (np && /^\d{6}$/.test(np)) { 
+    config.adminPinHash = await hashPin(np); 
+    SS('config', config); 
+    alert('✅ Đã đổi mã ADMIN!');
+  }
   else alert('❌ Mã phải là 6 chữ số');
 }
 
