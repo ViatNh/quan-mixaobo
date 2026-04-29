@@ -20,6 +20,17 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
 .btn{display:block;width:100%;padding:16px;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;transition:.15s;text-align:center}
 .btn:active{transform:scale(.97)}
 
+/* ===== SETUP SCREEN ===== */
+#setup-view{max-width:400px;margin:40px auto;padding:20px}
+#setup-view h2{font-size:22px;text-align:center;margin-bottom:8px;color:#c0392b}
+#setup-view .setup-sub{text-align:center;color:#888;font-size:14px;margin-bottom:24px}
+.setup-field{margin-bottom:16px}
+.setup-field label{display:block;font-size:15px;font-weight:700;margin-bottom:6px;color:#555}
+.setup-field input{width:100%;padding:14px;border:2px solid #ddd;border-radius:12px;font-size:22px;text-align:center;letter-spacing:8px;outline:none}
+.setup-field input:focus{border-color:#c0392b}
+.setup-field .hint{font-size:12px;color:#999;margin-top:4px;text-align:center}
+.setup-btn{background:#c0392b;color:#fff;margin-top:8px}
+
 /* ===== PASSWORD GATE ===== */
 .gate{max-width:360px;margin:60px auto;padding:20px;text-align:center}
 .gate h2{font-size:24px;margin-bottom:8px}
@@ -77,7 +88,7 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
 .order-customer{font-size:16px;color:#555;font-weight:700}
 .order-time{font-size:12px;color:#999}
 
-/* ★★★ BIG FOOD ITEMS ★★★ */
+/* BIG BEP ITEMS */
 .order-items{list-style:none;padding:4px 0;margin:8px 0}
 .order-items li{font-size:24px;font-weight:700;padding:6px 0;display:flex;justify-content:space-between;align-items:center;line-height:1.4}
 .order-items .item-qty{background:#d63031;color:#fff;padding:4px 14px;border-radius:10px;font-size:20px;font-weight:800;white-space:nowrap}
@@ -117,10 +128,29 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
   #khach-view .menu-grid,.order-form{max-width:520px;margin:0 auto}
   #bep-view,#admin-view{max-width:640px;margin:0 auto}
   .stat-grid{grid-template-columns:repeat(4,1fr)}
+  #setup-view{max-width:440px}
 }
 </style>
 </head>
 <body>
+
+<!-- ===== SETUP (first run only) ===== -->
+<div id="setup-view" class="hidden">
+  <h2>🔧 THIẾT LẬP BAN ĐẦU</h2>
+  <div class="setup-sub">Đây là lần đầu sử dụng. Hãy đặt mã PIN cho quán.</div>
+  <div class="setup-field">
+    <label>🔐 Mã BẾP (4 chữ số — cho mẹ mở bếp)</label>
+    <input type="password" id="setupBepPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="••••">
+    <div class="hint">Ví dụ: 2468. Mẹ chỉ cần nhớ 4 số.</div>
+  </div>
+  <div class="setup-field">
+    <label>📊 Mã ADMIN (6 chữ số — cho anh quản lý)</label>
+    <input type="password" id="setupAdminPin" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="••••••">
+    <div class="hint">Ví dụ: 159357. Dùng để xem thống kê & đổi mã.</div>
+  </div>
+  <button class="btn setup-btn" id="setupBtn" onclick="doSetup()">💾 LƯU & BẮT ĐẦU</button>
+  <div class="error" id="setupError" style="text-align:center;margin-top:12px"></div>
+</div>
 
 <!-- ===== PASSWORD GATE ===== -->
 <div id="gate" class="gate hidden">
@@ -193,7 +223,7 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#33
     <button class="admin-btn" onclick="resetToday()">🔄 Reset hôm nay</button>
     <button class="admin-btn danger" onclick="clearAll()">🗑️ Xóa tất cả</button>
   </div>
-  <div class="sec-note" id="secNote">
+  <div class="sec-note">
     🔐 <b>Bảo mật:</b> PIN đã được mã hóa SHA-256, không lưu dạng plaintext.<br>
     ⚠️ <b>Lưu ý:</b> Đổi PIN chỉ áp dụng cho thiết bị hiện tại. Muốn đồng bộ PIN giữa máy bếp và máy quản trị, cần đổi PIN trên từng máy riêng.
   </div>
@@ -222,13 +252,12 @@ MENU.forEach(m => cart[m.id] = 0);
 
 let orders = LS('orders') || [];
 let orderSeq = LS('seq') || 0;
-let config = null; // loaded async in init
+let config = null;
 
 let currentMode = 'khach';
 let lockUntil = LS('lockUntil') || 0;
 let failCount = LS('failCount') || 0;
 let gateTarget = '';
-let bepInterval = null;
 
 // ===== PIN HASHING (SHA-256) =====
 async function hashPin(pin) {
@@ -239,24 +268,20 @@ async function hashPin(pin) {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// ===== MIGRATION: hash plaintext PINs if found =====
+// ===== MIGRATION: handle legacy plaintext configs =====
 async function migrateConfig(raw) {
-  if (!raw) {
-    // Brand new: hash defaults
+  if (!raw) return null; // triggers setup
+  // Already hashed
+  if (raw.bepPinHash && raw.adminPinHash) return raw;
+  // Legacy plaintext PINs — hash them
+  if (raw.bepPin || raw.adminPin) {
     return {
-      bepPinHash: await hashPin('8888'),
-      adminPinHash: await hashPin('123456'),
-      banCount: 10
+      bepPinHash: raw.bepPin ? await hashPin(raw.bepPin) : null,
+      adminPinHash: raw.adminPin ? await hashPin(raw.adminPin) : null,
+      banCount: raw.banCount || 10
     };
   }
-  // Already hashed?
-  if (raw.bepPinHash && raw.adminPinHash) return raw;
-  // Legacy plaintext
-  return {
-    bepPinHash: await hashPin(raw.bepPin || '8888'),
-    adminPinHash: await hashPin(raw.adminPin || '123456'),
-    banCount: raw.banCount || 10
-  };
+  return null; // corrupted, trigger setup
 }
 
 // ===== URL PARSING =====
@@ -265,10 +290,17 @@ const tableNumber = params.get('ban') || '';
 
 // ===== INIT =====
 async function init() {
-  // Load & migrate config
-  config = await migrateConfig(LS('config'));
-  SS('config', config);
+  const raw = LS('config');
+  config = await migrateConfig(raw);
 
+  // No config at all → show setup
+  if (!config || !config.bepPinHash || !config.adminPinHash) {
+    showSetup();
+    return;
+  }
+
+  // Config exists → proceed normally
+  SS('config', config);
   renderMenu();
   updateTotal();
   
@@ -283,16 +315,58 @@ async function init() {
   else if (hash === '#admin') showGate('admin');
   else showMode('khach');
 
-  // Auto-refresh bep
   setInterval(() => {
     if (currentMode === 'bep') { renderBep(); updateBepTime(); }
   }, 5000);
+}
+
+// ===== SETUP =====
+function showSetup() {
+  document.getElementById('khach-view').classList.add('hidden');
+  document.getElementById('bep-view').classList.add('hidden');
+  document.getElementById('admin-view').classList.add('hidden');
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('setup-view').classList.remove('hidden');
+}
+
+async function doSetup() {
+  const bepPin = document.getElementById('setupBepPin').value.trim();
+  const adminPin = document.getElementById('setupAdminPin').value.trim();
+  const err = document.getElementById('setupError');
+  const btn = document.getElementById('setupBtn');
+
+  if (!/^\d{4}$/.test(bepPin)) { err.textContent = '❌ Mã BẾP phải đúng 4 chữ số'; return; }
+  if (!/^\d{6}$/.test(adminPin)) { err.textContent = '❌ Mã ADMIN phải đúng 6 chữ số'; return; }
+  if (bepPin === adminPin) { err.textContent = '❌ Mã BẾP và ADMIN không được giống nhau'; return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Đang lưu...';
+  err.textContent = '';
+
+  config = {
+    bepPinHash: await hashPin(bepPin),
+    adminPinHash: await hashPin(adminPin),
+    banCount: 10
+  };
+  SS('config', config);
+
+  // Clear sensitive values from DOM
+  document.getElementById('setupBepPin').value = '';
+  document.getElementById('setupAdminPin').value = '';
+
+  document.getElementById('setup-view').classList.add('hidden');
+  
+  // Now init normally
+  renderMenu();
+  updateTotal();
+  showMode('khach');
 }
 
 // ===== MODE SWITCHING =====
 function showMode(mode) {
   currentMode = mode;
   document.getElementById('gate').classList.add('hidden');
+  document.getElementById('setup-view').classList.add('hidden');
   document.getElementById('khach-view').classList.toggle('hidden', mode !== 'khach');
   document.getElementById('bep-view').classList.toggle('hidden', mode !== 'bep');
   document.getElementById('admin-view').classList.toggle('hidden', mode !== 'admin');
@@ -309,6 +383,7 @@ function showGate(target) {
   const pin = document.getElementById('gatePin');
   const err = document.getElementById('gateError');
 
+  document.getElementById('setup-view').classList.add('hidden');
   gate.classList.remove('hidden');
   document.getElementById('khach-view').classList.add('hidden');
   document.getElementById('bep-view').classList.add('hidden');
@@ -364,7 +439,6 @@ async function checkPassword() {
 function logout() {
   window.location.hash = '';
   showMode('khach');
-  if (bepInterval) { clearInterval(bepInterval); bepInterval = null; }
 }
 
 // ===== KHACH =====
@@ -565,6 +639,8 @@ function clearAll() {
 
 // ===== KEYBOARD =====
 document.getElementById('gatePin').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
+document.getElementById('setupBepPin').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('setupAdminPin').focus(); });
+document.getElementById('setupAdminPin').addEventListener('keydown', e => { if (e.key === 'Enter') doSetup(); });
 
 // ===== START =====
 init();
