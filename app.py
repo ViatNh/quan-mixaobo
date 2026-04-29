@@ -279,6 +279,12 @@ def update_order_status(oid):
     if new_status not in ("waiting", "done", "paid", "cancelled"):
         return jsonify(error="Trạng thái không hợp lệ"), 400
 
+    # Auth: 'done' requires BEP, 'paid' requires ADMIN
+    if new_status == "paid" and not session.get("admin_authed"):
+        return jsonify(error="Cần quyền ADMIN để thanh toán"), 401
+    if new_status in ("done", "waiting", "cancelled") and not session.get("bep_authed") and not session.get("admin_authed"):
+        return jsonify(error="Cần quyền BẾP hoặc ADMIN"), 401
+
     db = get_db()
     db.execute(
         "UPDATE orders SET status=?, updated_at=datetime('now','localtime') WHERE id=?",
