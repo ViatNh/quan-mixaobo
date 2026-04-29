@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Quán Mì Xào Bò 🍳</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#333;min-height:100vh}
+.hidden{display:none!important}
+
+/* ===== HEADER ===== */
+.header{background:#c0392b;color:#fff;padding:16px 20px;text-align:center;font-size:24px;font-weight:800;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.header .sub{font-size:13px;font-weight:400;opacity:.9;margin-top:4px}
+
+/* ===== MODE SWITCHER ===== */
+.mode-switch{display:flex;gap:8px;padding:12px 16px;background:#fff;border-bottom:2px solid #eee;position:sticky;top:56px;z-index:9}
+.mode-btn{flex:1;padding:12px;border:2px solid #ddd;border-radius:12px;background:#fff;font-size:16px;font-weight:700;cursor:pointer;text-align:center;transition:.2s}
+.mode-btn.active{background:#c0392b;color:#fff;border-color:#c0392b}
+
+/* ===== KHACH VIEW ===== */
+#khach-view .menu-grid{display:flex;flex-direction:column;gap:12px;padding:16px}
+.menu-item{background:#fff;border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(0,0,0,.08);gap:12px}
+.menu-item .info{flex:1}
+.menu-item .name{font-size:18px;font-weight:700}
+.menu-item .price{font-size:14px;color:#888;margin-top:2px}
+.menu-item .qty{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.qty button{width:36px;height:36px;border-radius:50%;border:2px solid #c0392b;background:#fff;color:#c0392b;font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:.15s}
+.qty button:active{background:#c0392b;color:#fff}
+.qty .count{font-size:20px;font-weight:700;min-width:24px;text-align:center}
+
+.quick-actions{padding:0 16px 12px;display:flex;gap:8px}
+.quick-btn{flex:1;padding:12px 8px;border:2px solid #27ae60;border-radius:12px;background:#fff;color:#27ae60;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+.quick-btn:active{background:#27ae60;color:#fff}
+.quick-btn.all{background:#27ae60;color:#fff;font-size:15px}
+.quick-btn.all:active{background:#1e8449}
+
+.order-form{padding:0 16px 16px;display:flex;flex-direction:column;gap:10px}
+.order-form input{padding:14px 16px;border:2px solid #ddd;border-radius:12px;font-size:16px;outline:none;transition:.2s}
+.order-form input:focus{border-color:#c0392b}
+.submit-btn{padding:18px;background:#c0392b;color:#fff;border:none;border-radius:14px;font-size:20px;font-weight:800;cursor:pointer;transition:.15s}
+.submit-btn:active{background:#a93226}
+.submit-btn:disabled{background:#ccc;cursor:not-allowed}
+.submit-btn .total{font-size:14px;font-weight:400;opacity:.9}
+
+.success-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#27ae60;color:#fff;padding:16px 32px;border-radius:16px;font-size:18px;font-weight:700;z-index:100;animation:fadeInOut 3s forwards;text-align:center}
+@keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(-20px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}70%{opacity:1}100%{opacity:0}}
+
+/* ===== BEP VIEW ===== */
+#bep-view{padding:12px}
+.bep-header{display:flex;justify-content:space-between;align-items:center;padding:8px 0 16px}
+.bep-title{font-size:22px;font-weight:800;color:#c0392b}
+.bep-time{font-size:14px;color:#888}
+.bep-stats{display:flex;gap:8px}
+.stat-badge{padding:6px 14px;border-radius:20px;font-size:14px;font-weight:700}
+.stat-waiting{background:#ffeaa7;color:#d63031}
+.stat-done{background:#dfe6e9;color:#636e72}
+
+.order-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.1);border-left:6px solid #fdcb6e;transition:.3s}
+.order-card.new{border-left-color:#d63031;animation:pulse 1s ease-in-out}
+.order-card.done{border-left-color:#00b894;opacity:.7;background:#f8fff8}
+@keyframes pulse{0%,100%{box-shadow:0 2px 8px rgba(0,0,0,.1)}50%{box-shadow:0 4px 16px rgba(214,48,49,.3)}}
+
+.order-card .order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.order-number{font-size:20px;font-weight:800;color:#c0392b}
+.order-customer{font-size:15px;color:#555;font-weight:600}
+.order-time{font-size:12px;color:#999}
+.order-items{list-style:none;padding:0;margin:8px 0}
+.order-items li{font-size:18px;font-weight:600;padding:4px 0;display:flex;justify-content:space-between}
+.order-items .qty-badge{background:#eee;padding:2px 8px;border-radius:10px;font-size:14px}
+.order-note{font-size:14px;color:#e17055;font-style:italic;margin:6px 0;padding:6px 10px;background:#fff5f5;border-radius:8px}
+
+.done-btn{width:100%;padding:16px;background:#00b894;color:#fff;border:none;border-radius:12px;font-size:20px;font-weight:800;cursor:pointer;transition:.15s;margin-top:8px}
+.done-btn:active{background:#00a381}
+
+.divider{padding:8px 0;text-align:center;color:#888;font-size:14px;font-weight:600}
+.empty-state{text-align:center;padding:40px 20px;color:#bbb;font-size:18px;font-weight:600}
+.refresh-bar{text-align:center;padding:8px;color:#aaa;font-size:12px}
+
+/* ===== RESPONSIVE ===== */
+@media(min-width:768px){
+  #khach-view .menu-grid{max-width:600px;margin:0 auto}
+  .order-form{max-width:600px;margin:0 auto}
+  #bep-view{max-width:700px;margin:0 auto}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  🍳 QUÁN MÌ XÀO BÒ
+  <div class="sub">Chung cư — Order nhanh, bếp gọn</div>
+</div>
+
+<!-- MODE SWITCH -->
+<div class="mode-switch" id="modeSwitch">
+  <button class="mode-btn active" onclick="switchMode('khach')">🛒 KHÁCH ORDER</button>
+  <button class="mode-btn" onclick="switchMode('bep')">🔥 BẾP</button>
+</div>
+
+<!-- ===== KHACH VIEW ===== -->
+<div id="khach-view">
+  <div class="menu-grid" id="menuGrid"></div>
+
+  <div class="quick-actions">
+    <button class="quick-btn all" onclick="selectAll()">⚡ CHỌN HẾT</button>
+    <button class="quick-btn" onclick="resetAll()">✕ Bỏ hết</button>
+  </div>
+
+  <div class="order-form">
+    <input type="text" id="customerName" placeholder="👤 Tên anh/chị (hoặc số bàn)" autocomplete="off">
+    <input type="text" id="orderNote" placeholder="💬 Ghi chú: thêm ớt, ít bơ, không hành..." autocomplete="off">
+    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
+      🛒 GỬI ĐƠN
+      <div class="total" id="totalDisplay">0 món - 0đ</div>
+    </button>
+  </div>
+  <div id="toastContainer"></div>
+</div>
+
+<!-- ===== BEP VIEW ===== -->
+<div id="bep-view" class="hidden">
+  <div class="bep-header">
+    <div>
+      <div class="bep-title">🔥 ĐƠN ĐANG CHỜ</div>
+      <div class="bep-time" id="bepTime"></div>
+    </div>
+    <div class="bep-stats">
+      <div class="stat-badge stat-waiting" id="waitingCount">0 đơn</div>
+      <div class="stat-badge stat-done" id="doneCount">0 xong</div>
+    </div>
+  </div>
+  <div id="waitingOrders"></div>
+  <div class="divider" id="doneDivider">── ĐÃ XONG ──</div>
+  <div id="doneOrders"></div>
+  <div class="refresh-bar">🔄 Tự động cập nhật mỗi 5 giây</div>
+</div>
+
+<script>
+// ===== MENU DATA =====
+const MENU = [
+  { id: 1, name: '🥩 Bò bít tết',          price: 45000, emoji: '🥩' },
+  { id: 2, name: '🍜 Mì xào bò',            price: 35000, emoji: '🍜' },
+  { id: 3, name: '🍝 Nui xào bò',           price: 35000, emoji: '🍝' },
+  { id: 4, name: '🥟 Bánh mì xíu mại',      price: 20000, emoji: '🥟' },
+  { id: 5, name: '🍲 Bánh mì bò kho',       price: 25000, emoji: '🍲' },
+  { id: 6, name: '🥪 Bánh mì thịt',         price: 15000, emoji: '🥪' },
+  { id: 7, name: '🍳 Bánh mì ốp la',        price: 15000, emoji: '🍳' },
+];
+
+// ===== STATE =====
+let cart = {};
+let orders = JSON.parse(localStorage.getItem('quan_orders') || '[]');
+let orderCounter = parseInt(localStorage.getItem('quan_counter') || '0');
+let currentMode = 'khach';
+
+// Init cart
+MENU.forEach(m => cart[m.id] = 0);
+
+// ===== INIT =====
+function init() {
+  renderMenu();
+  updateTotal();
+  switchMode('khach');
+  setInterval(updateBepTime, 1000);
+  if (currentMode === 'bep') renderBep();
+}
+
+// ===== KHACH: RENDER MENU =====
+function renderMenu() {
+  const grid = document.getElementById('menuGrid');
+  grid.innerHTML = MENU.map(m => `
+    <div class="menu-item">
+      <div class="info">
+        <div class="name">${m.name}</div>
+        <div class="price">${m.price.toLocaleString('vi')}đ</div>
+      </div>
+      <div class="qty">
+        <button onclick="changeQty(${m.id}, -1)">−</button>
+        <span class="count" id="qty-${m.id}">0</span>
+        <button onclick="changeQty(${m.id}, 1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function changeQty(id, delta) {
+  cart[id] = Math.max(0, (cart[id] || 0) + delta);
+  document.getElementById(`qty-${id}`).textContent = cart[id];
+  updateTotal();
+}
+
+function selectAll() {
+  MENU.forEach(m => { cart[m.id] = 1; document.getElementById(`qty-${m.id}`).textContent = 1; });
+  updateTotal();
+}
+
+function resetAll() {
+  MENU.forEach(m => { cart[m.id] = 0; document.getElementById(`qty-${m.id}`).textContent = 0; });
+  updateTotal();
+}
+
+function updateTotal() {
+  let count = 0, total = 0;
+  MENU.forEach(m => { count += cart[m.id]; total += cart[m.id] * m.price; });
+  document.getElementById('totalDisplay').textContent = `${count} món - ${total.toLocaleString('vi')}đ`;
+}
+
+// ===== KHACH: SUBMIT ORDER =====
+function submitOrder() {
+  const name = document.getElementById('customerName').value.trim();
+  if (!name) { alert('Vui lòng nhập tên hoặc số bàn!'); return; }
+
+  let items = [];
+  MENU.forEach(m => { if (cart[m.id] > 0) items.push({ id: m.id, name: m.name, qty: cart[m.id], price: m.price }); });
+  if (items.length === 0) { alert('Vui lòng chọn ít nhất 1 món!'); return; }
+
+  orderCounter++;
+  const order = {
+    id: orderCounter,
+    items: items,
+    customer: name,
+    note: document.getElementById('orderNote').value.trim(),
+    time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+    timestamp: Date.now(),
+    status: 'waiting' // waiting | done
+  };
+
+  orders.unshift(order);
+  localStorage.setItem('quan_orders', JSON.stringify(orders));
+  localStorage.setItem('quan_counter', orderCounter);
+
+  // Reset form
+  resetAll();
+  document.getElementById('customerName').value = '';
+  document.getElementById('orderNote').value = '';
+
+  // Toast
+  showToast(`✅ Đã gửi đơn #${order.id} — ${order.customer}`);
+  updateTotal();
+}
+
+function showToast(msg) {
+  const el = document.createElement('div');
+  el.className = 'success-toast';
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// ===== BEP: RENDER =====
+function renderBep() {
+  const waiting = orders.filter(o => o.status === 'waiting').reverse(); // oldest first
+  const done = orders.filter(o => o.status === 'done');
+
+  document.getElementById('waitingCount').textContent = `${waiting.length} đơn`;
+  document.getElementById('doneCount').textContent = `${done.length} xong`;
+  document.getElementById('doneDivider').style.display = done.length > 0 ? '' : 'none';
+
+  document.getElementById('waitingOrders').innerHTML = waiting.length > 0
+    ? waiting.map(o => renderOrderCard(o, true)).join('')
+    : '<div class="empty-state">✨ Hết đơn rồi mẹ ơi!</div>';
+
+  document.getElementById('doneOrders').innerHTML = done.map(o => renderOrderCard(o, false)).join('');
+}
+
+function renderOrderCard(order, isWaiting) {
+  const secondsAgo = Math.floor((Date.now() - order.timestamp) / 1000);
+  const agoStr = secondsAgo < 60 ? `${secondsAgo}s trước` : `${Math.floor(secondsAgo / 60)}p trước`;
+  const isNew = secondsAgo < 10;
+
+  return `
+    <div class="order-card ${isWaiting && isNew ? 'new' : ''} ${!isWaiting ? 'done' : ''}">
+      <div class="order-header">
+        <span class="order-number">#${order.id}</span>
+        <span class="order-customer">👤 ${order.customer}</span>
+        <span class="order-time">${order.time} · ${agoStr}</span>
+      </div>
+      <ul class="order-items">
+        ${order.items.map(i => `<li>${i.name} <span class="qty-badge">x${i.qty}</span></li>`).join('')}
+      </ul>
+      ${order.note ? `<div class="order-note">💬 ${order.note}</div>` : ''}
+      ${isWaiting ? `<button class="done-btn" onclick="markDone(${order.id})">✅ XONG — ĐƠN TIẾP</button>` : ''}
+    </div>
+  `;
+}
+
+function markDone(id) {
+  const order = orders.find(o => o.id === id);
+  if (order) order.status = 'done';
+  localStorage.setItem('quan_orders', JSON.stringify(orders));
+  renderBep();
+}
+
+// Auto-refresh Bep view every 5s
+let bepInterval = null;
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && mode === 'khach') || (i === 1 && mode === 'bep'));
+  });
+  document.getElementById('khach-view').classList.toggle('hidden', mode !== 'khach');
+  document.getElementById('bep-view').classList.toggle('hidden', mode !== 'bep');
+
+  if (mode === 'bep') {
+    renderBep();
+    updateBepTime();
+    if (!bepInterval) bepInterval = setInterval(renderBep, 5000);
+  } else {
+    if (bepInterval) { clearInterval(bepInterval); bepInterval = null; }
+  }
+}
+
+function updateBepTime() {
+  if (currentMode !== 'bep') return;
+  const now = new Date();
+  document.getElementById('bepTime').textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+// ===== Keyboard shortcut for Bep =====
+document.addEventListener('keydown', e => {
+  if (e.key === 'b' && e.ctrlKey) { e.preventDefault(); switchMode('bep'); }
+  if (e.key === 'k' && e.ctrlKey) { e.preventDefault(); switchMode('khach'); }
+});
+
+// ===== URL hash routing =====
+function checkHash() {
+  const hash = window.location.hash;
+  if (hash === '#bep') switchMode('bep');
+  else if (hash === '#khach') switchMode('khach');
+}
+window.addEventListener('hashchange', checkHash);
+
+// ===== Init =====
+init();
+checkHash();
+</script>
+</body>
+</html>
