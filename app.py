@@ -67,13 +67,13 @@ def init_db():
     # Seed menu
     if db.execute("SELECT COUNT(*) FROM menu").fetchone()[0] == 0:
         menu = [
-            ("🥩 Bò bít tết", 45000),
-            ("🍜 Mì xào bò", 35000),
-            ("🍝 Nui xào bò", 35000),
-            ("🥟 Bánh mì xíu mại", 20000),
-            ("🍲 Bánh mì bò kho", 25000),
-            ("🥪 Bánh mì thịt", 15000),
-            ("🍳 Bánh mì ốp la", 15000),
+            ("🥩 Bò bít tết", 40000),
+            ("🍜 Mì xào bò", 25000),
+            ("🍝 Nui xào bò", 25000),
+            ("🥟 Bánh mì xíu mại", 25000),
+            ("🍲 Bánh mì bò kho", 30000),
+            ("🥪 Bánh mì thịt", 18000),
+            ("🍳 Bánh mì ốp la", 20000),
         ]
         db.executemany("INSERT INTO menu (name, price) VALUES (?, ?)", menu)
     db.commit()
@@ -195,9 +195,50 @@ def auth_me():
 @app.route("/api/menu")
 def get_menu():
     rows = get_db().execute(
-        "SELECT id, name, price FROM menu WHERE active=1 ORDER BY id"
+        "SELECT id, name, price, active FROM menu ORDER BY id"
     ).fetchall()
     return jsonify([dict(r) for r in rows])
+
+
+@app.route("/api/menu/<int:mid>", methods=["PUT"])
+@require_admin
+def update_menu(mid):
+    data = request.get_json() or {}
+    name = (data.get("name") or "").strip()
+    price = data.get("price")
+    active = data.get("active")
+
+    if name and price is not None:
+        get_db().execute(
+            "UPDATE menu SET name=?, price=?, active=? WHERE id=?",
+            (name, int(price), 1 if active else 0, mid),
+        )
+        get_db().commit()
+        return jsonify(ok=True)
+    return jsonify(error="Thiếu name hoặc price"), 400
+
+
+@app.route("/api/menu/<int:mid>", methods=["DELETE"])
+@require_admin
+def delete_menu(mid):
+    get_db().execute("DELETE FROM menu WHERE id=?", (mid,))
+    get_db().commit()
+    return jsonify(ok=True)
+
+
+@app.route("/api/menu", methods=["POST"])
+@require_admin
+def add_menu():
+    data = request.get_json() or {}
+    name = (data.get("name") or "").strip()
+    price = data.get("price")
+    if not name or price is None:
+        return jsonify(error="Thiếu tên hoặc giá"), 400
+    get_db().execute(
+        "INSERT INTO menu (name, price) VALUES (?, ?)", (name, int(price))
+    )
+    get_db().commit()
+    return jsonify(ok=True)
 
 # ═══════════════════════════════════════════
 # ROUTES — ORDERS

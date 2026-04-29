@@ -3,607 +3,550 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Quán Mì Xào Bò 🍳</title>
+<title>Quán Mì Xào Bò</title>
 <style>
+:root {
+  --red: #c0392b; --red-dark: #a93226;
+  --green: #27ae60; --green-dark: #219a52;
+  --orange: #e67e22;
+  --bg: #faf7f2; --card: #fff; --text: #2d3436;
+  --muted: #636e72; --border: #e8e4df;
+  --shadow: 0 1px 3px rgba(0,0,0,.06);
+  --radius: 12px;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0eb;color:#333;min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;-webkit-tap-highlight-color:transparent}
 .hidden{display:none!important}
 
-/* ── COMMON ── */
-.header{background:#c0392b;color:#fff;padding:14px 20px;text-align:center;font-size:22px;font-weight:800;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.header .sub{font-size:12px;font-weight:400;opacity:.9;margin-top:2px}
-.header.bep{position:static;padding:6px 14px;font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.header.bep .bep-live{display:flex;align-items:center;gap:8px;font-size:13px}
-.header.bep .live-dot{width:10px;height:10px;background:#2ecc71;border-radius:50%;animation:blink 1s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+/* Nav */
+.nav{background:var(--card);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:20}
+.nav-brand{font-size:17px;font-weight:700;color:var(--red);display:flex;align-items:center;gap:6px}
+.nav-brand span{opacity:.6;font-weight:400;font-size:13px}
+.nav-actions{display:flex;gap:6px}
+.nav-btn{padding:6px 14px;border:1.5px solid var(--border);border-radius:8px;background:var(--card);font-size:13px;font-weight:600;cursor:pointer;color:var(--text);transition:.15s}
+.nav-btn:hover{background:var(--bg)}
+.nav-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
 
-.btn{display:block;width:100%;padding:16px;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;transition:.15s;text-align:center}
-.btn:active{transform:scale(.97)}
+/* Cards */
+.card{background:var(--card);border-radius:var(--radius);padding:16px;margin:10px 12px;box-shadow:var(--shadow);border:1px solid var(--border)}
 
-/* ── SETUP ── */
-#setup-view{max-width:400px;margin:40px auto;padding:20px}
-#setup-view h2{font-size:22px;text-align:center;margin-bottom:8px;color:#c0392b}
-.setup-sub{text-align:center;color:#888;font-size:14px;margin-bottom:24px}
-.setup-field{margin-bottom:16px}
-.setup-field label{display:block;font-size:15px;font-weight:700;margin-bottom:6px;color:#555}
-.setup-field input{width:100%;padding:14px;border:2px solid #ddd;border-radius:12px;font-size:22px;text-align:center;letter-spacing:8px;outline:none}
-.setup-field input:focus{border-color:#c0392b}
-.setup-field .hint{font-size:12px;color:#999;margin-top:4px;text-align:center}
-.setup-btn{background:#c0392b;color:#fff;margin-top:8px}
-.err-msg{color:#d63031;font-size:14px;text-align:center;margin-top:12px}
+/* Setup */
+.setup-wrap{max-width:400px;margin:40px auto;padding:20px}
+.setup-wrap h2{font-size:22px;text-align:center;color:var(--red);margin-bottom:4px}
+.setup-wrap .sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:24px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:5px;color:var(--text)}
+.field input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:20px;text-align:center;letter-spacing:6px;outline:none;background:var(--bg)}
+.field input:focus{border-color:var(--red);background:var(--card)}
+.field .hint{font-size:12px;color:var(--muted);margin-top:3px;text-align:center}
+.err{color:#d63031;font-size:13px;text-align:center;margin-top:10px}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:.15s;text-align:center}
+.btn:active{transform:scale(.98)}
+.btn-red{background:var(--red);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-outline{padding:10px 18px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);font-size:14px;font-weight:600;cursor:pointer;width:auto}
 
-/* ── PIN GATE ── */
-.gate{max-width:360px;margin:60px auto;padding:20px;text-align:center}
-.gate h2{font-size:24px;margin-bottom:8px}
-.gate .subtitle{color:#888;font-size:14px;margin-bottom:20px}
-.gate input{width:100%;padding:16px;border:2px solid #ddd;border-radius:14px;font-size:28px;text-align:center;letter-spacing:12px;outline:none;max-width:220px;margin:0 auto 16px;display:block}
-.gate input:focus{border-color:#c0392b}
+/* Gate */
+.gate-wrap{max-width:360px;margin:60px auto;padding:20px;text-align:center}
+.gate-wrap h2{font-size:24px;margin-bottom:6px}
+.gate-wrap .sub{color:var(--muted);font-size:14px;margin-bottom:18px}
+.gate-wrap input{width:100%;padding:14px;border:1.5px solid var(--border);border-radius:12px;font-size:26px;text-align:center;letter-spacing:10px;outline:none;max-width:220px;margin:0 auto 16px;display:block;background:var(--bg)}
+.gate-wrap input:focus{border-color:var(--red);background:var(--card)}
 
-/* ── KHACH ── */
-#khach-view .menu-grid{display:flex;flex-direction:column;gap:12px;padding:12px}
-.menu-item{background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.menu-item .item-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.menu-item .info{flex:1}
-.menu-item .name{font-size:17px;font-weight:700}
-.menu-item .price{font-size:13px;color:#888;margin-top:2px}
-.menu-item .qty{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.qty button{width:34px;height:34px;border-radius:50%;border:2px solid #c0392b;background:#fff;color:#c0392b;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
-.qty button:active{background:#c0392b;color:#fff}
-.qty .count{font-size:18px;font-weight:700;min-width:22px;text-align:center}
-.item-note-wrap{margin-top:8px;display:none}
-.item-note-wrap.show{display:block}
-.item-note-wrap input{width:100%;padding:10px;border:2px solid #eee;border-radius:10px;font-size:14px;outline:none;background:#fafafa}
-.item-note-wrap input:focus{border-color:#c0392b;background:#fff}
+/* Menu grid (customer) */
+.menu-list{display:flex;flex-direction:column;gap:8px}
+.menu-row{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:10px}
+.menu-row .info{flex:1;min-width:0}
+.menu-row .name{font-size:15px;font-weight:600}
+.menu-row .price{font-size:13px;color:var(--muted);margin-top:1px}
+.menu-row .qty{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.qty-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--red);background:var(--card);color:var(--red);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;line-height:1}
+.qty-btn:active{background:var(--red);color:#fff}
+.qty-count{font-size:16px;font-weight:700;min-width:20px;text-align:center}
+.item-note{margin-top:6px;display:none}
+.item-note.visible{display:block}
+.item-note input{width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:var(--bg)}
+.item-note input:focus{border-color:var(--red);background:var(--card)}
 
+/* Order form */
 .order-form{padding:0 12px 16px;display:flex;flex-direction:column;gap:8px}
-.order-form input{padding:14px;border:2px solid #ddd;border-radius:12px;font-size:16px;outline:none}
-.order-form input:focus{border-color:#c0392b}
-.ban-display{background:#fff3cd;padding:10px 14px;border-radius:10px;font-size:15px;font-weight:600;text-align:center;color:#856404}
-.submit-btn{padding:18px;background:#c0392b;color:#fff;font-size:20px;font-weight:800}
-.submit-btn .total{font-size:13px;font-weight:400;opacity:.9}
-.submit-btn:disabled{background:#ccc}
+.order-form input{padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;outline:none;background:var(--card)}
+.order-form input:focus{border-color:var(--red)}
+.table-badge{background:#fff3cd;padding:8px 12px;border-radius:8px;font-size:14px;font-weight:600;text-align:center;color:#856404}
+.submit-btn{padding:16px;background:var(--red);color:#fff;font-size:18px;font-weight:700;border-radius:12px}
+.submit-btn .total{font-size:12px;opacity:.85}
 
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#27ae60;color:#fff;padding:16px 28px;border-radius:14px;font-size:17px;font-weight:700;z-index:100;animation:fInOut 3s forwards;text-align:center}
-@keyframes fInOut{0%{opacity:0;transform:translateX(-50%) translateY(-20px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}70%{opacity:1}100%{opacity:0}}
+/* Toast */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:14px 24px;border-radius:12px;font-size:15px;font-weight:600;z-index:100;animation:toastAnim 3s forwards;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+@keyframes toastAnim{0%{opacity:0;transform:translateX(-50%) translateY(-12px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}70%{opacity:1}100%{opacity:0}}
 
-/* ── BEP ── */
-#bep-view{padding:8px}
-.bep-stats-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0 8px}
-.bep-title-row{font-size:17px;font-weight:800;color:#c0392b}
-.bep-badges{display:flex;gap:6px;align-items:center}
-.stat-badge{padding:6px 14px;border-radius:16px;font-size:14px;font-weight:700}
-.stat-waiting{background:#ffeaa7;color:#d63031}
-.stat-done{background:#dfe6e9;color:#636e72}
-.logout-btn{padding:6px 12px;border:2px solid #c0392b;border-radius:8px;background:#fff;color:#c0392b;font-size:13px;font-weight:700;cursor:pointer}
+/* Bep */
+.bep-stats{display:flex;justify-content:space-between;align-items:center;padding:8px 12px}
+.bep-title{font-size:16px;font-weight:700;color:var(--red)}
+.badges{display:flex;gap:6px}
+.badge{padding:5px 12px;border-radius:14px;font-size:13px;font-weight:600}
+.badge-wait{background:#ffeaa7;color:#d63031}
+.badge-done{background:#dfe6e9;color:#636e72}
 
-.order-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);border-left:6px solid #fdcb6e}
-.order-card.new{border-left-color:#d63031;animation:pulse 1s ease-in-out}
-.order-card.done{border-left-color:#00b894;opacity:.6;background:#f8fff8}
-@keyframes pulse{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.08)}50%{box-shadow:0 4px 18px rgba(214,48,49,.35)}}
+.order-card{background:var(--card);border-radius:var(--radius);padding:14px;margin:0 12px 10px;box-shadow:var(--shadow);border:1px solid var(--border);border-left:5px solid var(--orange);transition:.3s}
+.order-card.new{border-left-color:#d63031;animation:glow 1.2s ease}
+.order-card.done{border-left-color:var(--green);opacity:.65}
+@keyframes glow{0%,100%{box-shadow:var(--shadow)}50%{box-shadow:0 3px 14px rgba(214,48,49,.25)}}
 
-.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.order-number{font-size:20px;font-weight:800;color:#c0392b}
-.order-customer{font-size:16px;color:#555;font-weight:700}
-.order-time{font-size:12px;color:#999}
-.order-items{list-style:none;padding:4px 0;margin:8px 0}
-.order-items li{font-size:22px;font-weight:700;padding:5px 0;display:flex;justify-content:space-between;align-items:center;line-height:1.4}
-.order-items .item-qty{background:#d63031;color:#fff;padding:4px 14px;border-radius:10px;font-size:20px;font-weight:800;white-space:nowrap}
-.order-items .item-note-badge{font-size:13px;color:#e17055;font-weight:500;background:#fff5f5;padding:2px 8px;border-radius:6px;margin-left:6px}
+.oc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.oc-id{font-size:18px;font-weight:800;color:var(--red)}
+.oc-customer{font-size:15px;font-weight:600}
+.oc-time{font-size:11px;color:var(--muted)}
+.oc-items{list-style:none;padding:2px 0;margin:4px 0}
+.oc-items li{font-size:20px;font-weight:700;padding:4px 0;display:flex;justify-content:space-between;align-items:center}
+.oc-qty{background:#d63031;color:#fff;padding:3px 12px;border-radius:8px;font-size:18px;font-weight:800}
+.oc-note{display:inline-block;font-size:12px;color:#e17055;background:#fff5f5;padding:2px 8px;border-radius:6px;margin-left:6px;font-weight:500}
+.oc-done-btn{display:block;width:100%;padding:14px;background:var(--green);color:#fff;font-size:18px;font-weight:700;border:none;border-radius:10px;cursor:pointer;margin-top:8px}
+.oc-done-btn:active{transform:scale(.98)}
 
-.done-btn{width:100%;padding:16px;background:#00b894;color:#fff;font-size:20px;font-weight:800;margin-top:8px}
+.divider{padding:6px 0;text-align:center;color:var(--muted);font-size:13px;font-weight:600}
+.empty{text-align:center;padding:36px 20px;color:#bbb;font-size:16px;font-weight:500}
 
-.divider{padding:8px 0;text-align:center;color:#888;font-size:14px;font-weight:600}
-.empty-state{text-align:center;padding:40px 20px;color:#bbb;font-size:18px;font-weight:600}
+/* Admin */
+.admin-tabs{display:flex;gap:0;margin:10px 12px;border-radius:10px;overflow:hidden;border:1.5px solid var(--border)}
+.admin-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;background:var(--card);border:none;transition:.15s;color:var(--text)}
+.admin-tab.active{background:var(--red);color:#fff}
+.admin-header{display:flex;justify-content:space-between;align-items:center;padding:0 12px;margin-bottom:8px}
+.admin-date{font-size:14px;font-weight:600;color:var(--muted)}
 
-/* ── ADMIN ── */
-#admin-view{padding:12px}
-.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.admin-title{font-size:20px;font-weight:800}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 12px 10px}
+.stat{background:var(--card);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border)}
+.stat .val{font-size:24px;font-weight:800;color:var(--red)}
+.stat .lbl{font-size:11px;color:var(--muted);margin-top:2px}
 
-.admin-tabs{display:flex;gap:0;margin-bottom:16px;border-radius:12px;overflow:hidden;border:2px solid #ddd}
-.admin-tab{flex:1;padding:12px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;background:#fff;border:none;transition:.15s}
-.admin-tab.active{background:#c0392b;color:#fff}
+.chart{margin:0 12px}
+.bar{margin-bottom:7px}
+.bar-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px}
+.bar-track{height:22px;background:#eee;border-radius:10px;overflow:hidden}
+.bar-fill{height:100%;background:var(--red);border-radius:10px;display:flex;align-items:center;padding-left:8px;font-size:11px;color:#fff;font-weight:600;min-width:36px;transition:width .4s}
+.bar-fill.top{background:#d63031}
 
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.stat-card{background:#fff;border-radius:12px;padding:16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.stat-card .value{font-size:28px;font-weight:800;color:#c0392b}
-.stat-card .label{font-size:12px;color:#888;margin-top:4px}
+/* Bills */
+.bill-row{display:flex;align-items:center;gap:10px;padding:12px;margin:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.bill-info{flex:1}
+.bill-name{font-size:15px;font-weight:600}
+.bill-meta{font-size:12px;color:var(--muted)}
+.bill-amount{font-size:18px;font-weight:800;color:var(--red);white-space:nowrap}
+.bill-pay{padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.bill-pay:active{transform:scale(.97)}
 
-.chart-section{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.chart-title{font-size:16px;font-weight:700;margin-bottom:12px}
-.chart-bar{margin-bottom:8px}
-.chart-bar .bar-label{display:flex;justify-content:space-between;font-size:14px;margin-bottom:3px}
-.chart-bar .bar-track{height:24px;background:#eee;border-radius:12px;overflow:hidden}
-.chart-bar .bar-fill{height:100%;background:#c0392b;border-radius:12px;transition:width .3s;display:flex;align-items:center;padding-left:8px;font-size:11px;color:#fff;font-weight:700;min-width:40px}
-.chart-bar .bar-fill.top{background:#d63031}
+/* Menu editor */
+.menu-editor{margin:0 12px}
+.me-table{width:100%;border-collapse:collapse}
+.me-table th{text-align:left;padding:8px 6px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);font-weight:600}
+.me-table td{padding:10px 6px;border-bottom:1px solid var(--border);font-size:14px}
+.me-name{font-weight:600}
+.me-price{color:var(--red);font-weight:600}
+.me-actions{display:flex;gap:4px}
+.me-btn{padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);font-size:12px;cursor:pointer;font-weight:600}
+.me-btn.edit{color:var(--orange);border-color:var(--orange)}
+.me-btn.toggle{color:var(--green);border-color:var(--green)}
+.me-btn.del{color:#d63031;border-color:#d63031}
+.me-add{display:flex;gap:8px;margin-top:12px}
+.me-add input{padding:10px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;flex:1;outline:none}
+.me-add input:focus{border-color:var(--red)}
+.me-add button{padding:10px 16px;background:var(--red);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap}
 
-/* ── BILLS ── */
-.bill-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;gap:10px}
-.bill-card .bill-info{flex:1}
-.bill-card .bill-customer{font-size:16px;font-weight:700}
-.bill-card .bill-table{font-size:13px;color:#888}
-.bill-card .bill-amount{font-size:20px;font-weight:800;color:#c0392b}
-.bill-card .bill-time{font-size:12px;color:#999}
-.pay-btn{padding:10px 20px;background:#00b894;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;white-space:nowrap}
-.pay-btn:active{transform:scale(.97)}
+/* Settings */
+.actions-list{padding:0 12px;display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.act-btn{padding:12px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);font-size:14px;font-weight:600;cursor:pointer;text-align:left;color:var(--text);transition:.15s}
+.act-btn:hover{background:var(--bg)}
+.act-btn.danger{color:#d63031;border-color:#fce4e4}
 
-.admin-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.admin-btn{padding:10px 16px;border:2px solid #ddd;border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer}
-.admin-btn.danger{border-color:#d63031;color:#d63031}
-.section-title{font-size:18px;font-weight:700;margin:20px 0 10px}
-.sec-note{background:#fff3cd;padding:12px 16px;border-radius:12px;font-size:13px;color:#856404;margin-top:12px;line-height:1.6}
+.note-box{background:#fff8e1;padding:12px 14px;border-radius:10px;font-size:12px;color:#856404;margin:12px;line-height:1.6;border:1px solid #ffe082}
 
 @media(min-width:768px){
-  #khach-view .menu-grid,.order-form{max-width:520px;margin:0 auto}
+  .menu-list,.order-form{max-width:500px;margin:0 auto}
   #bep-view,#admin-view{max-width:640px;margin:0 auto}
-  .stat-grid{grid-template-columns:repeat(4,1fr)}
+  .stats{grid-template-columns:repeat(4,1fr)}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ SETUP ═══ -->
-<div id="setup-view" class="hidden">
-  <h2>🔧 THIẾT LẬP BAN ĐẦU</h2>
-  <div class="setup-sub">Đây là lần đầu sử dụng. Hãy đặt mã PIN cho quán.</div>
-  <div class="setup-field">
-    <label>🔐 Mã BẾP (4 chữ số — cho mẹ)</label>
-    <input type="password" id="setupBepPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="••••">
-    <div class="hint">Ví dụ: 2468</div>
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-brand">🍳 Quán Mì Xào Bò <span>· Mẹ nấu ngon</span></div>
+  <div class="nav-actions">
+    <button class="nav-btn" onclick="navTo('khach')" id="navKhach">Thực đơn</button>
+    <button class="nav-btn" onclick="navTo('bep')" id="navBep">Bếp</button>
+    <button class="nav-btn" onclick="navTo('admin')" id="navAdmin">Quản lý</button>
   </div>
-  <div class="setup-field">
-    <label>📊 Mã ADMIN (6 chữ số — cho anh)</label>
-    <input type="password" id="setupAdminPin" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="••••••">
-    <div class="hint">Ví dụ: 159357</div>
-  </div>
-  <button class="btn setup-btn" id="setupBtn" onclick="doSetup()">💾 LƯU & BẮT ĐẦU</button>
-  <div class="err-msg" id="setupError"></div>
+</nav>
+
+<!-- Setup -->
+<div id="setupView" class="setup-wrap hidden">
+  <h2>Thiết lập ban đầu</h2>
+  <p class="sub">Chào mừng! Hãy đặt mã PIN bảo vệ cho quán.</p>
+  <div class="field"><label>Mã BẾP (4 chữ số)</label><input type="password" id="setupBep" maxlength="4" inputmode="numeric" placeholder="····"><span class="hint">Cho mẹ mở màn hình bếp</span></div>
+  <div class="field"><label>Mã QUẢN LÝ (6 chữ số)</label><input type="password" id="setupAdmin" maxlength="6" inputmode="numeric" placeholder="······"><span class="hint">Cho anh xem thống kê & cài đặt</span></div>
+  <button class="btn btn-red" onclick="doSetup()">Lưu & bắt đầu</button>
+  <div class="err" id="setupErr"></div>
 </div>
 
-<!-- ═══ PIN GATE ═══ -->
-<div id="gate" class="gate hidden">
+<!-- Gate -->
+<div id="gateView" class="gate-wrap hidden">
   <h2 id="gateTitle">🔐</h2>
-  <div class="subtitle" id="gateSub"></div>
-  <input type="password" id="gatePin" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
-  <div class="err-msg" id="gateError"></div>
-  <button class="btn" style="background:#c0392b;color:#fff" onclick="checkPassword()">MỞ KHÓA</button>
+  <p class="sub" id="gateSub"></p>
+  <input type="password" id="gatePin" maxlength="6" inputmode="numeric" placeholder="······">
+  <div class="err" id="gateErr"></div>
+  <button class="btn btn-red" onclick="checkPin()">Mở khóa</button>
 </div>
 
-<!-- ═══ KHÁCH ═══ -->
-<div id="khach-view">
-  <div class="header">🍳 QUÁN MÌ XÀO BÒ<div class="sub">Chọn món → Ghi chú riêng → Gửi đơn</div></div>
-  <div class="ban-display hidden" id="banDisplay"></div>
-  <div class="menu-grid" id="menuGrid"></div>
+<!-- Customer -->
+<div id="customerView">
+  <div class="card"><div class="menu-list" id="menuGrid"></div></div>
+  <div class="card hidden" id="tableBadge"></div>
   <div class="order-form">
-    <input type="text" id="customerName" placeholder="👤 Tên anh/chị" autocomplete="off">
-    <button class="btn submit-btn" id="submitBtn" onclick="submitOrder()">
-      🛒 GỬI ĐƠN <span class="total" id="totalDisplay">0 món - 0đ</span>
+    <input type="text" id="custName" placeholder="Tên của bạn" autocomplete="off">
+    <button class="btn btn-red submit-btn" onclick="placeOrder()">
+      Gửi đơn <span class="total" id="orderSummary">— 0đ</span>
     </button>
   </div>
-  <div id="toastContainer"></div>
+  <div id="toasts"></div>
 </div>
 
-<!-- ═══ BẾP ═══ -->
-<div id="bep-view" class="hidden">
-  <div class="header bep">
-    <span>🔥 BẾP</span>
-    <div class="bep-live"><span class="live-dot"></span><span id="bepTime">--:--:--</span></div>
-    <button class="logout-btn" onclick="logout()">🔒 Thoát</button>
-  </div>
-  <div class="bep-stats-row">
-    <div class="bep-title-row">📋 ĐƠN ĐANG CHỜ</div>
-    <div class="bep-badges">
-      <div class="stat-badge stat-waiting" id="waitingCount">0 đơn</div>
-      <div class="stat-badge stat-done" id="doneCount">0 xong</div>
+<!-- Bep -->
+<div id="bepView" class="hidden">
+  <div class="bep-stats">
+    <div class="bep-title">Đơn đang chờ</div>
+    <div class="badges">
+      <span class="badge badge-wait" id="waitCount">0</span>
+      <span class="badge badge-done" id="doneCount">0</span>
+      <button class="nav-btn" onclick="doLogout()" style="margin-left:4px">Thoát</button>
     </div>
   </div>
-  <div id="waitingOrders"></div>
-  <div class="divider" id="doneDivider" style="display:none">── ✅ ĐÃ XONG ──</div>
+  <div id="waitOrders"></div>
+  <div class="divider hidden" id="doneLabel">— Đã xong —</div>
   <div id="doneOrders"></div>
 </div>
 
-<!-- ═══ ADMIN ═══ -->
-<div id="admin-view" class="hidden">
-  <div class="header">📊 QUẢN TRỊ<div class="sub">Dashboard · Thanh toán · Cài đặt</div></div>
-  <div class="admin-header">
-    <div class="admin-title" id="adminDate">Hôm nay</div>
-    <button class="logout-btn" onclick="logout()">🔒</button>
-  </div>
+<!-- Admin -->
+<div id="adminView" class="hidden">
+  <div class="admin-header"><div class="admin-date" id="adDate"></div></div>
   <div class="admin-tabs">
-    <button class="admin-tab active" onclick="switchAdminTab('dashboard')">📊 Tổng quan</button>
-    <button class="admin-tab" onclick="switchAdminTab('bills')">💰 Thanh toán</button>
-    <button class="admin-tab" onclick="switchAdminTab('settings')">⚙️ Cài đặt</button>
+    <button class="admin-tab active" onclick="adTab('dash')">Tổng quan</button>
+    <button class="admin-tab" onclick="adTab('bills')">Thanh toán</button>
+    <button class="admin-tab" onclick="adTab('menu')">Thực đơn</button>
+    <button class="admin-tab" onclick="adTab('settings')">Cài đặt</button>
   </div>
-  <div id="admin-dashboard">
-    <div class="stat-grid" id="statGrid"></div>
-    <div class="chart-section">
-      <div class="chart-title">🍽️ Món bán chạy hôm nay</div>
-      <div id="topItems"></div>
+  <div id="adDash"><div class="stats" id="statGrid"></div><div class="card chart"><b>Món bán chạy</b><div id="topItems" style="margin-top:10px"></div></div><div class="card chart"><b>7 ngày qua</b><div id="weekStats" style="margin-top:10px"></div></div></div>
+  <div id="adBills" class="hidden"><div id="billList"></div></div>
+  <div id="adMenu" class="hidden"><div class="menu-editor" id="menuEditor"></div></div>
+  <div id="adSettings" class="hidden">
+    <div class="actions-list">
+      <button class="act-btn" onclick="chPin('bep')">Đổi mã BẾP (4 số)</button>
+      <button class="act-btn" onclick="chPin('admin')">Đổi mã quản lý (6 số)</button>
+      <button class="act-btn" onclick="doExport()">Xuất CSV</button>
+      <button class="act-btn danger" onclick="doReset()">Xoá dữ liệu hôm nay</button>
     </div>
-    <div class="chart-section">
-      <div class="chart-title">📅 7 ngày qua</div>
-      <div id="weeklyStats"></div>
-    </div>
-  </div>
-  <div id="admin-bills" class="hidden">
-    <div id="pendingBills"></div>
-  </div>
-  <div id="admin-settings" class="hidden">
-    <div class="section-title">⚙️ Cài đặt</div>
-    <div class="admin-actions">
-      <button class="admin-btn" onclick="changeBepPin()">🔑 Đổi mã BẾP</button>
-      <button class="admin-btn" onclick="changeAdminPin()">🔐 Đổi mã ADMIN</button>
-      <button class="admin-btn" onclick="exportCsv()">📥 Xuất CSV</button>
-      <button class="admin-btn danger" onclick="resetToday()">🔄 Reset hôm nay</button>
-    </div>
-    <div class="sec-note">
-      🔐 PIN được hash SHA-256 trên server, không ai xem được.<br>
-      💡 Đổi PIN trên server áp dụng cho TẤT CẢ thiết bị (khác với localStorage cũ).
-    </div>
+    <div class="note-box">PIN được mã hoá SHA-256 trên máy chủ. Đổi PIN ở đây áp dụng cho <b>tất cả thiết bị</b>.</div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════
-// API HELPERS
-// ═══════════════════════════════════════════
-async function api(url, opts = {}) {
-  const res = await fetch(url, { credentials: 'same-origin', headers: {'Content-Type':'application/json'}, ...opts });
-  return res.json();
+// ═══ API ═══
+async function api(u, o={}) {
+  const r = await fetch(u, {credentials:'same-origin', headers:{'Content-Type':'application/json'}, ...o});
+  return r.json();
 }
 
-// ═══════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════
-let menu = [];
-let cart = {};
-let currentMode = 'khach';
-let adminTab = 'dashboard';
+// ═══ STATE ═══
+let menu=[], cart={}, mode='khach', adTabName='dash';
+const P = new URLSearchParams(location.search), tbl = P.get('ban')||'';
 
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-const params = new URLSearchParams(window.location.search);
-const tableNumber = params.get('ban') || '';
-
+// ═══ INIT ═══
 async function init() {
-  // Check setup
   const st = await api('/api/setup/status');
-  if (st.needs_setup) { showSetup(); return; }
+  if (st.needs_setup) { showView('setup'); return; }
 
-  // Load menu
   menu = await api('/api/menu');
-  menu.forEach(m => cart[m.id] = 0);
-  renderMenu();
-  updateTotal();
+  menu.forEach(m => cart[m.id]=0);
+  renderCustomer();
 
-  if (tableNumber) {
-    document.getElementById('customerName').value = 'Bàn ' + tableNumber;
-    document.getElementById('banDisplay').textContent = '📍 Bàn ' + tableNumber;
-    document.getElementById('banDisplay').classList.remove('hidden');
+  // Persistent login — check existing session
+  const me = await api('/api/auth/me');
+  const hash = location.hash.replace('#','');
+
+  if (hash==='bep' && me.bep) { showView('bep'); renderBep(); return; }
+  if (hash==='admin' && me.admin) { showView('admin'); renderAdmin(); return; }
+
+  if (hash==='bep') showGate('bep');
+  else if (hash==='admin') showGate('admin');
+  else showView('khach');
+
+  setInterval(() => { if (mode==='bep') renderBep(); }, 5000);
+}
+
+function showView(v) {
+  mode = v;
+  ['customerView','bepView','adminView','gateView','setupView'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  if (v==='khach') document.getElementById('customerView').classList.remove('hidden');
+  else if (v==='bep') document.getElementById('bepView').classList.remove('hidden');
+  else if (v==='admin') document.getElementById('adminView').classList.remove('hidden');
+  // Nav highlight
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (v==='khach') document.getElementById('navKhach').classList.add('active');
+  else if (v==='bep') document.getElementById('navBep').classList.add('active');
+  else if (v==='admin') document.getElementById('navAdmin').classList.add('active');
+}
+
+function navTo(v) {
+  if (v==='khach') { location.hash=''; showView('khach'); }
+  else if (v==='bep') {
+    api('/api/auth/me').then(me => {
+      if (me.bep) { location.hash='bep'; showView('bep'); renderBep(); }
+      else showGate('bep');
+    });
+  } else if (v==='admin') {
+    api('/api/auth/me').then(me => {
+      if (me.admin) { location.hash='admin'; showView('admin'); renderAdmin(); }
+      else showGate('admin');
+    });
   }
-
-  const hash = window.location.hash;
-  if (hash === '#bep') showGate('bep');
-  else if (hash === '#admin') showGate('admin');
-  else showMode('khach');
-
-  // Auto-refresh bep
-  setInterval(() => {
-    if (currentMode === 'bep') renderBep();
-  }, 5000);
 }
 
-// ═══════════════════════════════════════════
-// SETUP
-// ═══════════════════════════════════════════
-function showSetup() {
-  document.querySelectorAll('#khach-view,#bep-view,#admin-view,#gate').forEach(e => e.classList.add('hidden'));
-  document.getElementById('setup-view').classList.remove('hidden');
-}
-
+// ═══ SETUP ═══
 async function doSetup() {
-  const bep = document.getElementById('setupBepPin').value.trim();
-  const admin = document.getElementById('setupAdminPin').value.trim();
-  const err = document.getElementById('setupError');
-
-  const res = await api('/api/setup', { method:'POST', body:JSON.stringify({bep_pin:bep, admin_pin:admin}) });
-  if (res.ok) {
-    document.getElementById('setupBepPin').value = '';
-    document.getElementById('setupAdminPin').value = '';
-    document.getElementById('setup-view').classList.add('hidden');
-    init();
-  } else {
-    err.textContent = '❌ ' + (res.error || 'Lỗi');
-  }
+  const b = document.getElementById('setupBep').value.trim();
+  const a = document.getElementById('setupAdmin').value.trim();
+  const r = await api('/api/setup',{method:'POST',body:JSON.stringify({bep_pin:b,admin_pin:a})});
+  if (r.ok) { document.getElementById('setupBep').value=''; document.getElementById('setupAdmin').value=''; init(); }
+  else document.getElementById('setupErr').textContent = r.error||'Lỗi';
 }
 
-// ═══════════════════════════════════════════
-// AUTH
-// ═══════════════════════════════════════════
-function showGate(target) {
-  document.querySelectorAll('#khach-view,#bep-view,#admin-view,#setup-view').forEach(e => e.classList.add('hidden'));
-  const g = document.getElementById('gate');
-  g.classList.remove('hidden');
-  document.getElementById('gateTitle').textContent = target === 'bep' ? '🔐 BẾP' : '📊 QUẢN TRỊ';
-  document.getElementById('gateSub').textContent = target === 'bep' ? 'Nhập mã PIN 4 số' : 'Nhập mã PIN 6 số';
-  document.getElementById('gatePin').value = '';
-  document.getElementById('gatePin').maxLength = target === 'bep' ? 4 : 6;
-  document.getElementById('gateError').textContent = '';
+// ═══ GATE ═══
+let gt='';
+function showGate(t) {
+  gt=t; showView('gate');
+  document.getElementById('gateTitle').textContent = t==='bep'?'Bếp':'Quản lý';
+  document.getElementById('gateSub').textContent = t==='bep'?'Nhập mã 4 số':'Nhập mã 6 số';
+  document.getElementById('gatePin').value='';
+  document.getElementById('gatePin').maxLength = t==='bep'?4:6;
+  document.getElementById('gateErr').textContent='';
   document.getElementById('gatePin').focus();
-  window._gateTarget = target;
+}
+async function checkPin() {
+  const p = document.getElementById('gatePin').value;
+  const u = gt==='bep'?'/api/auth/bep':'/api/auth/admin';
+  const r = await api(u,{method:'POST',body:JSON.stringify({pin:p})});
+  if (r.ok) { location.hash=gt; showView(gt); if (gt==='bep') renderBep(); else renderAdmin(); }
+  else { document.getElementById('gateErr').textContent='Sai mã PIN'; document.getElementById('gatePin').value=''; }
+}
+async function doLogout() {
+  await api('/api/auth/logout',{method:'POST'});
+  location.hash=''; showView('khach');
 }
 
-async function checkPassword() {
-  const pin = document.getElementById('gatePin').value;
-  const target = window._gateTarget;
-  const url = target === 'bep' ? '/api/auth/bep' : '/api/auth/admin';
-  const res = await api(url, { method:'POST', body:JSON.stringify({pin}) });
-  if (res.ok) {
-    window.location.hash = target === 'bep' ? '#bep' : '#admin';
-    showMode(target);
-  } else {
-    document.getElementById('gateError').textContent = '❌ ' + (res.error || 'Sai PIN');
-    document.getElementById('gatePin').value = '';
+// ═══ CUSTOMER ═══
+function renderCustomer() {
+  const active = menu.filter(m => m.active!==0);
+  document.getElementById('menuGrid').innerHTML = active.map(m =>
+    `<div class="menu-row">
+      <div class="info"><div class="name">${m.name}</div><div class="price">${m.price.toLocaleString('vi')}đ</div></div>
+      <div class="qty">
+        <button class="qty-btn" onclick="chg(${m.id},-1)">−</button>
+        <span class="qty-count" id="q${m.id}">0</span>
+        <button class="qty-btn" onclick="chg(${m.id},1)">+</button>
+      </div>
+    </div>
+    <div class="item-note" id="nw${m.id}"><input id="n${m.id}" placeholder="Ghi chú món này..." autocomplete="off"></div>`
+  ).join('');
+
+  if (tbl) {
+    document.getElementById('custName').value = 'Bàn '+tbl;
+    document.getElementById('tableBadge').textContent = '📍 Bàn '+tbl;
+    document.getElementById('tableBadge').classList.remove('hidden');
   }
+  updateTotal();
 }
 
-async function logout() {
-  await api('/api/auth/logout', { method:'POST' });
-  window.location.hash = '';
-  showMode('khach');
-}
-
-function showMode(mode) {
-  currentMode = mode;
-  document.getElementById('gate').classList.add('hidden');
-  document.getElementById('setup-view').classList.add('hidden');
-  document.getElementById('khach-view').classList.toggle('hidden', mode !== 'khach');
-  document.getElementById('bep-view').classList.toggle('hidden', mode !== 'bep');
-  document.getElementById('admin-view').classList.toggle('hidden', mode !== 'admin');
-  if (mode === 'bep') renderBep();
-  if (mode === 'admin') renderAdmin();
-}
-
-// ═══════════════════════════════════════════
-// KHACH
-// ═══════════════════════════════════════════
-function renderMenu() {
-  document.getElementById('menuGrid').innerHTML = menu.map(m => `
-    <div class="menu-item" id="menu-item-${m.id}">
-      <div class="item-top">
-        <div class="info"><div class="name">${m.name}</div><div class="price">${m.price.toLocaleString('vi')}đ</div></div>
-        <div class="qty">
-          <button onclick="changeQty(${m.id},-1)">−</button>
-          <span class="count" id="qty-${m.id}">0</span>
-          <button onclick="changeQty(${m.id},1)">+</button>
-        </div>
-      </div>
-      <div class="item-note-wrap" id="note-wrap-${m.id}">
-        <input type="text" id="note-${m.id}" placeholder="💬 Ghi chú món này: thêm ớt, chín kỹ..." autocomplete="off">
-      </div>
-    </div>`).join('');
-}
-
-function changeQty(id, d) {
-  cart[id] = Math.max(0, (cart[id]||0) + d);
-  document.getElementById('qty-'+id).textContent = cart[id];
-  const wrap = document.getElementById('note-wrap-'+id);
-  wrap.classList.toggle('show', cart[id] > 0);
-  if (cart[id] === 0) document.getElementById('note-'+id).value = '';
+function chg(id,d) {
+  cart[id]=Math.max(0,(cart[id]||0)+d);
+  document.getElementById('q'+id).textContent=cart[id];
+  document.getElementById('nw'+id).classList.toggle('visible',cart[id]>0);
+  if (cart[id]===0) document.getElementById('n'+id).value='';
   updateTotal();
 }
 
 function updateTotal() {
-  let c = 0, t = 0;
-  menu.forEach(m => { c += cart[m.id]; t += cart[m.id] * m.price; });
-  document.getElementById('totalDisplay').textContent = `${c} món - ${t.toLocaleString('vi')}đ`;
+  let c=0,t=0;
+  menu.filter(m=>m.active!==0).forEach(m=>{c+=cart[m.id];t+=cart[m.id]*m.price;});
+  document.getElementById('orderSummary').textContent = c?`${c} món · ${t.toLocaleString('vi')}đ`:'— 0đ';
 }
 
-async function submitOrder() {
-  const name = document.getElementById('customerName').value.trim();
-  if (!name) return alert('Vui lòng nhập tên!');
-
+async function placeOrder() {
+  const name = document.getElementById('custName').value.trim();
+  if (!name) return toast('Vui lòng nhập tên','err');
   const items = [];
-  menu.forEach(m => {
-    if (cart[m.id] > 0) {
-      items.push({
-        menu_item_id: m.id,
-        quantity: cart[m.id],
-        note: document.getElementById('note-'+m.id).value.trim()
-      });
-    }
+  menu.filter(m=>m.active!==0).forEach(m=>{
+    if (cart[m.id]>0) items.push({menu_item_id:m.id,quantity:cart[m.id],note:document.getElementById('n'+m.id).value.trim()});
   });
-  if (!items.length) return alert('Chọn ít nhất 1 món!');
-
-  const res = await api('/api/orders', {
-    method:'POST',
-    body:JSON.stringify({ customer_name:name, table_number:tableNumber, items })
-  });
-  if (res.ok) {
-    // Reset
-    menu.forEach(m => { cart[m.id]=0; document.getElementById('qty-'+m.id).textContent=0; document.getElementById('note-wrap-'+m.id).classList.remove('show'); document.getElementById('note-'+m.id).value=''; });
-    document.getElementById('customerName').value = tableNumber ? 'Bàn '+tableNumber : '';
+  if (!items.length) return toast('Chọn ít nhất 1 món','err');
+  const r = await api('/api/orders',{method:'POST',body:JSON.stringify({customer_name:name,table_number:tbl,items})});
+  if (r.ok) {
+    menu.forEach(m=>{cart[m.id]=0;document.getElementById('q'+m.id).textContent=0;document.getElementById('nw'+m.id).classList.remove('visible');document.getElementById('n'+m.id).value='';});
+    document.getElementById('custName').value = tbl?'Bàn '+tbl:'';
     updateTotal();
-    toast(`✅ Đơn #${res.order_id} — ${name}`);
-  } else {
-    alert(res.error || 'Lỗi gửi đơn');
-  }
+    toast(`Đã gửi đơn #${r.order_id}`);
+  } else toast(r.error||'Lỗi','err');
 }
 
-function toast(msg) {
-  const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
-  document.getElementById('toastContainer').appendChild(el);
-  setTimeout(() => el.remove(), 3200);
+function toast(m,t) {
+  const e=document.createElement('div');e.className='toast';
+  if (t==='err') e.style.background='#d63031';
+  e.textContent=m;document.getElementById('toasts').appendChild(e);
+  setTimeout(()=>e.remove(),3000);
 }
 
-// ═══════════════════════════════════════════
-// BEP
-// ═══════════════════════════════════════════
+// ═══ BEP ═══
 async function renderBep() {
-  const waiting = await api('/api/orders?status=waiting');
-  const done = await api('/api/orders?status=done');
-
-  document.getElementById('waitingCount').textContent = waiting.length + ' đơn';
-  document.getElementById('doneCount').textContent = done.length + ' xong';
-  document.getElementById('doneDivider').style.display = done.length ? '' : 'none';
-
-  document.getElementById('waitingOrders').innerHTML = waiting.length
-    ? waiting.map(o => orderCard(o, true)).join('')
-    : '<div class="empty-state">✨ Hết đơn — mẹ nghỉ tay!</div>';
-  document.getElementById('doneOrders').innerHTML = done.map(o => orderCard(o, false)).join('');
-
-  // Update time
-  const now = new Date();
-  document.getElementById('bepTime').textContent = now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const w = await api('/api/orders?status=waiting');
+  const d = await api('/api/orders?status=done');
+  document.getElementById('waitCount').textContent = w.length+' đơn';
+  document.getElementById('doneCount').textContent = d.length+' xong';
+  document.getElementById('doneLabel').classList.toggle('hidden',!d.length);
+  document.getElementById('waitOrders').innerHTML = w.length ? w.map(o=>oc(o,true)).join('') : '<div class="empty">Hết đơn — mẹ nghỉ tay ☕</div>';
+  document.getElementById('doneOrders').innerHTML = d.map(o=>oc(o,false)).join('');
 }
 
-function timeAgo(ts) {
-  const ago = Math.floor((Date.now() - new Date(ts+'Z').getTime()) / 1000);
-  return ago < 60 ? `${ago}s` : `${Math.floor(ago/60)}p`;
-}
-
-function orderCard(order, waiting) {
-  const ago = timeAgo(order.created_at);
-  return `<div class="order-card ${waiting && parseInt(ago) < 15 ? 'new' : ''} ${!waiting ? 'done' : ''}">
-    <div class="order-header">
-      <span class="order-number">#${order.id}</span>
-      <span class="order-customer">👤 ${order.customer_name}${order.table_number ? ' · Bàn '+order.table_number : ''}</span>
-      <span class="order-time">${order.created_at.slice(11,16)} (${ago})</span>
+function oc(o,waiting) {
+  const ts = new Date(o.created_at+'Z'), ago = Math.floor((Date.now()-ts)/1000);
+  const as = ago<60?`${ago}s`:`${Math.floor(ago/60)}ph`;
+  return `<div class="order-card ${waiting&&ago<15?'new':''} ${!waiting?'done':''}">
+    <div class="oc-head">
+      <span class="oc-id">#${o.id}</span>
+      <span class="oc-customer">${o.customer_name}${o.table_number?' · Bàn '+o.table_number:''}</span>
+      <span class="oc-time">${o.created_at.slice(11,16)} · ${as}</span>
     </div>
-    <ul class="order-items">${order.items.map(i => `<li><span>${i.menu_name} ${i.note ? '<span class="item-note-badge">'+i.note+'</span>' : ''}</span><span class="item-qty">✕${i.quantity}</span></li>`).join('')}</ul>
-    ${waiting ? `<button class="btn done-btn" onclick="markDone(${order.id})">✅ XONG — ĐƠN TIẾP THEO</button>` : ''}
+    <ul class="oc-items">${o.items.map(i=>`<li><span>${i.menu_name}${i.note?` <span class="oc-note">${i.note}</span>`:''}</span><span class="oc-qty">×${i.quantity}</span></li>`).join('')}</ul>
+    ${waiting?`<button class="oc-done-btn" onclick="markDone(${o.id})">Xong — đơn tiếp</button>`:''}
   </div>`;
 }
 
 async function markDone(id) {
-  await api(`/api/orders/${id}/status`, { method:'PUT', body:JSON.stringify({status:'done'}) });
+  await api(`/api/orders/${id}/status`,{method:'PUT',body:JSON.stringify({status:'done'})});
   renderBep();
 }
 
-// ═══════════════════════════════════════════
-// ADMIN
-// ═══════════════════════════════════════════
+// ═══ ADMIN ═══
 async function renderAdmin() {
-  const now = new Date();
-  document.getElementById('adminDate').textContent = '📅 ' + now.toLocaleDateString('vi-VN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  switchAdminTab(adminTab);
+  document.getElementById('adDate').textContent = new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'numeric',year:'numeric'});
+  adTab(adTabName);
 }
 
-function switchAdminTab(tab) {
-  adminTab = tab;
-  document.querySelectorAll('.admin-tab').forEach((t,i) => t.classList.toggle('active', 
-    (i===0 && tab==='dashboard') || (i===1 && tab==='bills') || (i===2 && tab==='settings')));
-  document.getElementById('admin-dashboard').classList.toggle('hidden', tab !== 'dashboard');
-  document.getElementById('admin-bills').classList.toggle('hidden', tab !== 'bills');
-  document.getElementById('admin-settings').classList.toggle('hidden', tab !== 'settings');
-
-  if (tab === 'dashboard') renderDashboard();
-  if (tab === 'bills') renderBills();
-}
-
-async function renderDashboard() {
-  const stats = await api('/api/stats/today');
-  if (stats.error) return;
-
-  document.getElementById('statGrid').innerHTML = `
-    <div class="stat-card"><div class="value">${stats.total_orders}</div><div class="label">Tổng đơn</div></div>
-    <div class="stat-card"><div class="value">${stats.total_items}</div><div class="label">Món đã làm</div></div>
-    <div class="stat-card"><div class="value">${stats.paid_revenue.toLocaleString('vi')}đ</div><div class="label">Doanh thu</div></div>
-    <div class="stat-card"><div class="value">${stats.avg_per_order.toLocaleString('vi')}đ</div><div class="label">TB/đơn</div></div>`;
-
-  const top = stats.top_items || [];
-  const maxQty = top[0] ? top[0].qty : 1;
-  document.getElementById('topItems').innerHTML = top.length
-    ? top.map((t,i) => `<div class="chart-bar">
-        <div class="bar-label"><span>${t.name}</span><span>${t.qty} phần</span></div>
-        <div class="bar-track"><div class="bar-fill ${i===0?'top':''}" style="width:${Math.max(5, t.qty/maxQty*100)}%">${t.qty}</div></div>
-      </div>`).join('')
-    : '<div class="empty-state">Chưa có dữ liệu</div>';
-
-  const week = await api('/api/stats/weekly');
-  const maxRev = Math.max(1, ...week.map(w=>w.revenue));
-  document.getElementById('weeklyStats').innerHTML = week.map(w => {
-    const dayName = new Date(w.date).toLocaleDateString('vi-VN',{weekday:'short'});
-    const pct = w.revenue/maxRev*100;
-    return `<div class="chart-bar">
-      <div class="bar-label"><span>${dayName} ${w.date.slice(5)}</span><span>${w.orders} đơn · ${w.revenue.toLocaleString('vi')}đ</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${Math.max(3,pct)}%">${w.revenue.toLocaleString('vi')}đ</div></div>
-    </div>`;
-  }).join('');
-}
-
-async function renderBills() {
-  const bills = await api('/api/stats/pending_payments');
-  document.getElementById('pendingBills').innerHTML = bills.length
-    ? bills.map(b => `<div class="bill-card">
-        <div class="bill-info">
-          <div class="bill-customer">👤 ${b.customer_name}${b.table_number ? ' · Bàn '+b.table_number : ''}</div>
-          <div class="bill-time">#${b.id} · ${b.created_at.slice(11,16)}</div>
-        </div>
-        <div class="bill-amount">${b.total_amount.toLocaleString('vi')}đ</div>
-        <button class="pay-btn" onclick="markPaid(${b.id})">💵 ĐÃ TRẢ</button>
-      </div>`).join('')
-    : '<div class="empty-state">🎉 Không có đơn nào chờ thanh toán!</div>';
-}
-
-async function markPaid(id) {
-  await api(`/api/orders/${id}/status`, { method:'PUT', body:JSON.stringify({status:'paid'}) });
-  renderBills();
-  renderDashboard();
-  toast('✅ Đã thanh toán đơn #'+id);
-}
-
-// ═══════════════════════════════════════════
-// SETTINGS
-// ═══════════════════════════════════════════
-async function changeBepPin() {
-  const np = prompt('Nhập mã BẾP mới (4 số):');
-  if (!np || !/^\d{4}$/.test(np)) return alert('❌ Mã phải là 4 chữ số');
-  const res = await api('/api/config/pin/bep', { method:'PUT', body:JSON.stringify({pin:np}) });
-  alert(res.ok ? '✅ Đã đổi mã BẾP!' : '❌ '+(res.error||'Lỗi'));
-}
-
-async function changeAdminPin() {
-  const np = prompt('Nhập mã ADMIN mới (6 số):');
-  if (!np || !/^\d{6}$/.test(np)) return alert('❌ Mã phải là 6 chữ số');
-  const res = await api('/api/config/pin/admin', { method:'PUT', body:JSON.stringify({pin:np}) });
-  alert(res.ok ? '✅ Đã đổi mã ADMIN!' : '❌ '+(res.error||'Lỗi'));
-}
-
-async function exportCsv() {
-  const orders = await api('/api/orders');
-  const rows = [['ID','Khách','Bàn','Món','SL','Giá','Ghi chú','Thời gian','Trạng thái','Tổng']];
-  orders.forEach(o => {
-    o.items.forEach(i => rows.push([o.id, o.customer_name, o.table_number, i.menu_name, i.quantity, i.price, i.note || '', o.created_at, o.status, o.total_amount]));
+function adTab(t) {
+  adTabName=t;
+  document.querySelectorAll('.admin-tab').forEach((b,i)=>{
+    const tabs=['dash','bills','menu','settings'];
+    b.classList.toggle('active',tabs[i]===t);
   });
-  const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'quan-mixaobo-'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+  ['adDash','adBills','adMenu','adSettings'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('ad'+(t.charAt(0).toUpperCase()+t.slice(1))).classList.remove('hidden');
+  if (t==='dash') loadDash();
+  if (t==='bills') loadBills();
+  if (t==='menu') loadMenuEdit();
 }
 
-async function resetToday() {
-  if (!confirm('⚠️ Reset TẤT CẢ đơn hàng hôm nay? Dữ liệu đã thanh toán cũng mất!')) return;
-  const res = await api('/api/reset/today', { method:'POST' });
-  if (res.ok) {
-    alert('✅ Đã reset hôm nay!');
-    renderDashboard();
-  } else {
-    alert('❌ ' + (res.error || 'Lỗi'));
-  }
+async function loadDash() {
+  const s = await api('/api/stats/today');
+  if (s.error) return;
+  document.getElementById('statGrid').innerHTML = `
+    <div class="stat"><div class="val">${s.total_orders}</div><div class="lbl">Tổng đơn</div></div>
+    <div class="stat"><div class="val">${s.total_items}</div><div class="lbl">Món đã làm</div></div>
+    <div class="stat"><div class="val">${s.paid_revenue.toLocaleString('vi')}đ</div><div class="lbl">Doanh thu</div></div>
+    <div class="stat"><div class="val">${s.avg_per_order.toLocaleString('vi')}đ</div><div class="lbl">TB / đơn</div></div>`;
+  const top=s.top_items||[],mx=top[0]?top[0].qty:1;
+  document.getElementById('topItems').innerHTML = top.length ? top.map((t,i)=>`<div class="bar"><div class="bar-label"><span>${t.name}</span><span>${t.qty} phần</span></div><div class="bar-track"><div class="bar-fill ${i===0?'top':''}" style="width:${Math.max(5,t.qty/mx*100)}%">${t.qty}</div></div></div>`).join('') : '<div class="empty">Chưa có dữ liệu</div>';
+  const w = await api('/api/stats/weekly');
+  const mr = Math.max(1,...w.map(x=>x.revenue));
+  document.getElementById('weekStats').innerHTML = w.map(x=>{const dn=new Date(x.date).toLocaleDateString('vi-VN',{weekday:'short'});return `<div class="bar"><div class="bar-label"><span>${dn} ${x.date.slice(5)}</span><span>${x.orders} đơn · ${x.revenue.toLocaleString('vi')}đ</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(3,x.revenue/mr*100)}%">${x.revenue.toLocaleString('vi')}đ</div></div></div>`;}).join('');
 }
 
-// ═══════════════════════════════════════════
-// KEYBOARD
-// ═══════════════════════════════════════════
-document.getElementById('gatePin').addEventListener('keydown', e => { if (e.key==='Enter') checkPassword(); });
-document.getElementById('setupBepPin').addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('setupAdminPin').focus(); });
-document.getElementById('setupAdminPin').addEventListener('keydown', e => { if (e.key==='Enter') doSetup(); });
+async function loadBills() {
+  const b = await api('/api/stats/pending_payments');
+  document.getElementById('billList').innerHTML = b.length ? b.map(x=>`<div class="bill-row"><div class="bill-info"><div class="bill-name">${x.customer_name}${x.table_number?' · Bàn '+x.table_number:''}</div><div class="bill-meta">#${x.id} · ${x.created_at.slice(11,16)}</div></div><div class="bill-amount">${x.total_amount.toLocaleString('vi')}đ</div><button class="bill-pay" onclick="doPay(${x.id})">Đã trả</button></div>`).join('') : '<div class="empty">Không có đơn chờ thanh toán ✨</div>';
+}
+async function doPay(id) { await api(`/api/orders/${id}/status`,{method:'PUT',body:JSON.stringify({status:'paid'})}); loadBills(); loadDash(); toast(`Đã thanh toán #${id}`); }
 
-// ═══════════════════════════════════════════
-// START
-// ═══════════════════════════════════════════
+// ═══ MENU EDIT ═══
+async function loadMenuEdit() {
+  const m = await api('/api/menu');
+  document.getElementById('menuEditor').innerHTML = `
+    <table class="me-table"><thead><tr><th>Món</th><th>Giá</th><th></th></tr></thead>
+    <tbody>${m.map(x=>`<tr>
+      <td class="me-name">${x.name} ${x.active?'' : '<span style="color:#d63031;font-size:11px">(ẩn)</span>'}</td>
+      <td class="me-price">${x.price.toLocaleString('vi')}đ</td>
+      <td class="me-actions">
+        <button class="me-btn edit" onclick="editMenuItem(${x.id},'${x.name.replace(/'/g,"\\'")}',${x.price})">Sửa</button>
+        <button class="me-btn toggle" onclick="toggleMenuItem(${x.id},${x.active?0:1})">${x.active?'Ẩn':'Hiện'}</button>
+        <button class="me-btn del" onclick="delMenuItem(${x.id})">Xoá</button>
+      </td>
+    </tr>`).join('')}</tbody></table>
+    <div class="me-add">
+      <input id="newName" placeholder="Tên món mới">
+      <input id="newPrice" placeholder="Giá" type="number" style="max-width:100px">
+      <button onclick="addMenuItem()">Thêm</button>
+    </div>`;
+}
+
+async function editMenuItem(id,name,price) {
+  const nn=prompt('Tên món:',name); if (!nn) return;
+  const np=prompt('Giá (VNĐ):',price); if (!np||isNaN(np)) return;
+  const r = await api(`/api/menu/${id}`,{method:'PUT',body:JSON.stringify({name:nn,price:parseInt(np),active:1})});
+  if (r.ok) { loadMenuEdit(); renderCustomer(); toast('Đã cập nhật'); }
+}
+async function toggleMenuItem(id,active) {
+  const m = menu.find(x=>x.id===id);
+  if (!m) return;
+  const r = await api(`/api/menu/${id}`,{method:'PUT',body:JSON.stringify({name:m.name,price:m.price,active})});
+  if (r.ok) { loadMenuEdit(); renderCustomer(); }
+}
+async function delMenuItem(id) {
+  if (!confirm('Xoá món này?')) return;
+  const r = await api(`/api/menu/${id}`,{method:'DELETE'});
+  if (r.ok) { menu=menu.filter(x=>x.id!==id); loadMenuEdit(); renderCustomer(); }
+}
+async function addMenuItem() {
+  const n=document.getElementById('newName').value.trim();
+  const p=document.getElementById('newPrice').value;
+  if (!n||!p||isNaN(p)) return toast('Nhập tên và giá','err');
+  const r = await api('/api/menu',{method:'POST',body:JSON.stringify({name:n,price:parseInt(p)})});
+  if (r.ok) { menu=await api('/api/menu'); menu.forEach(m=>{if(!(m.id in cart)) cart[m.id]=0;}); loadMenuEdit(); renderCustomer(); toast('Đã thêm món'); }
+}
+
+// ═══ SETTINGS ═══
+async function chPin(role) {
+  const len=role==='bep'?4:6;
+  const np=prompt(`Mã ${role==='bep'?'BẾP':'quản lý'} mới (${len} số):`);
+  if (!np||!new RegExp(`^\\d{${len}}$`).test(np)) return toast(`Phải đúng ${len} chữ số`,'err');
+  const r = await api(`/api/config/pin/${role}`,{method:'PUT',body:JSON.stringify({pin:np})});
+  toast(r.ok?'Đã đổi mã':r.error||'Lỗi', r.ok?'':'err');
+}
+async function doExport() {
+  const o=await api('/api/orders');
+  const rows=[['ID','Khách','Bàn','Món','SL','Giá','Ghi chú','TG','Trạng thái','Tổng']];
+  o.forEach(x=>x.items.forEach(i=>rows.push([x.id,x.customer_name,x.table_number,i.menu_name,i.quantity,i.price,i.note||'',x.created_at,x.status,x.total_amount])));
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const b=new Blob(['\ufeff'+csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='mixaobo-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
+async function doReset() {
+  if (!confirm('Xoá tất cả đơn hàng hôm nay?')) return;
+  const r = await api('/api/reset/today',{method:'POST'});
+  if (r.ok) toast('Đã xoá');
+}
+
+// Keyboard
+document.getElementById('gatePin').addEventListener('keydown',e=>{if(e.key==='Enter')checkPin();});
+document.getElementById('setupBep').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('setupAdmin').focus();});
+document.getElementById('setupAdmin').addEventListener('keydown',e=>{if(e.key==='Enter')doSetup();});
+
 init();
 </script>
 </body>
